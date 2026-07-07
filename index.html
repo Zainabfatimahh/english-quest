@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>English Quest — Learn English as a Game</title>
+<meta name="description" content="Master English grammar and vocabulary through a gamified, level-based learning adventure."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ENGLISH QUEST — styles.css
+   Theme: a night sky atlas. Topics are stars; mastery lights them.
+   ============================================================ */
+:root{
+  --bg:#0B1230;
+  --bg-panel:#141B3F;
+  --bg-panel-2:#1B2350;
+  --bg-panel-3:#232C5E;
+  --line:rgba(255,255,255,0.09);
+  --text:#E9ECFB;
+  --text-dim:#909BC7;
+  --text-dimmer:#6A75A6;
+
+  --teal:#4FD1C5;
+  --gold:#F0B84B;
+  --violet:#A78BFA;
+  --coral:#FF6F6F;
+  --nova:#FF9A5A;
+
+  --c-teal:var(--teal);
+  --c-gold:var(--gold);
+  --c-violet:var(--violet);
+  --c-coral:var(--coral);
+  --c-nova:var(--nova);
+
+  --good:#57D68D;
+  --bad:#FF6F6F;
+
+  --font-display:'Fraunces', Georgia, serif;
+  --font-body:'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, monospace;
+
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow-glow:0 0 0 rgba(0,0,0,0);
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(79,209,197,0.08), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 0%, rgba(167,139,250,0.10), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.55;
+  min-height:100vh;
+}
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+}
+h1,h2,h3{ font-family:var(--font-display); font-weight:600; margin:0 0 .4em; letter-spacing:-0.01em; }
+p{ margin:0 0 .8em; color:var(--text-dim); }
+button{ font-family:inherit; cursor:pointer; }
+button:disabled{ cursor:not-allowed; opacity:.5; }
+.icon{ display:inline-flex; width:1em; height:1em; vertical-align:-0.15em; }
+.icon svg{ width:100%; height:100%; }
+
+#root{ max-width:1080px; margin:0 auto; padding:0 20px 90px; min-height:100vh; }
+
+/* ---------------- Topbar ---------------- */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:20px 0 18px; flex-wrap:wrap;
+}
+.brand{ display:flex; align-items:center; gap:8px; cursor:pointer; }
+.brand-mark{ color:var(--gold); width:22px; height:22px; }
+.brand-name{ font-family:var(--font-display); font-size:1.3rem; font-weight:600; }
+.brand-name em{ font-style:normal; color:var(--gold); }
+.main-nav{ display:flex; gap:4px; background:var(--bg-panel); border:1px solid var(--line); border-radius:999px; padding:4px; }
+.nav-btn{ background:none; border:none; color:var(--text-dim); padding:8px 16px; border-radius:999px; font-size:.92rem; font-weight:600; transition:.2s; }
+.nav-btn.active{ background:var(--bg-panel-3); color:var(--text); }
+.nav-btn:hover{ color:var(--text); }
+.stats-pill{ display:flex; gap:10px; align-items:center; }
+.stat{ display:flex; align-items:center; gap:5px; font-family:var(--font-mono); font-size:.82rem; color:var(--text-dim); background:var(--bg-panel); border:1px solid var(--line); padding:6px 10px; border-radius:999px; }
+.stat .icon{ color:var(--gold); width:.95em; height:.95em; }
+.stat b{ color:var(--text); font-weight:700; }
+.stat.lvl{ color:var(--text); font-weight:700; }
+
+.mobile-tabbar{ display:none; }
+
+/* ---------------- Hero / Home ---------------- */
+.hero{
+  display:grid; grid-template-columns:1fr auto; gap:28px; align-items:center;
+  background:linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2));
+  border:1px solid var(--line); border-radius:24px; padding:36px; margin:10px 0 26px;
+  position:relative; overflow:hidden;
+}
+.hero::before{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(2px 2px at 20% 30%, #fff8, transparent),
+    radial-gradient(2px 2px at 75% 60%, #fff6, transparent),
+    radial-gradient(1.5px 1.5px at 50% 15%, #fff5, transparent),
+    radial-gradient(1.5px 1.5px at 90% 80%, #fff5, transparent),
+    radial-gradient(1.5px 1.5px at 10% 85%, #fff5, transparent);
+}
+.eyebrow{ text-transform:uppercase; letter-spacing:.12em; font-size:.75rem; color:var(--gold); font-weight:700; margin:0 0 .5em; }
+.hero h1{ font-size:2.1rem; max-width:16ch; }
+.hero-sub{ max-width:46ch; }
+.hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; }
+.hero-ring{ position:relative; display:flex; align-items:center; justify-content:center; }
+
+.btn{ border:none; border-radius:12px; padding:12px 20px; font-weight:700; font-size:.95rem; display:inline-flex; align-items:center; gap:8px; transition:.15s; }
+.btn .icon{ width:1em; height:1em; }
+.btn-primary{ background:var(--gold); color:#241a04; }
+.btn-primary:hover:not(:disabled){ transform:translateY(-1px); box-shadow:0 6px 18px rgba(240,184,75,.28); }
+.btn-ghost{ background:var(--bg-panel-3); color:var(--text); border:1px solid var(--line); }
+.btn-ghost:hover{ background:var(--bg-panel-2); }
+.btn-disabled{ background:var(--bg-panel-3); color:var(--text-dimmer); }
+.btn-small{ padding:9px 14px; font-size:.85rem; width:100%; justify-content:center; }
+
+.xp-ring{ transform:rotate(-90deg); }
+.ring-track{ fill:none; stroke:var(--bg-panel-3); stroke-width:8; }
+.ring-fill{ fill:none; stroke:var(--gold); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .6s ease; }
+.ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+.ring-level{ font-family:var(--font-display); font-size:1.4rem; font-weight:700; }
+.ring-title{ font-size:.72rem; color:var(--text-dim); max-width:9ch; }
+.ring-xp{ font-family:var(--font-mono); font-size:.65rem; color:var(--text-dimmer); margin-top:2px; }
+
+.quickstats{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:26px; }
+.stat-card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:6px; align-items:flex-start; }
+.stat-icon{ color:var(--teal); width:22px; height:22px; }
+.stat-value{ font-family:var(--font-display); font-size:1.3rem; font-weight:700; }
+.stat-label{ font-size:.78rem; color:var(--text-dim); }
+
+.home-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:10px; }
+.home-card{
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:18px; padding:24px;
+  cursor:pointer; transition:.2s; border-left:4px solid var(--nc, var(--gold));
+}
+.home-card[data-color="teal"]{ --nc:var(--teal); }
+.home-card[data-color="gold"]{ --nc:var(--gold); }
+.home-card[data-color="violet"]{ --nc:var(--violet); }
+.home-card[data-color="coral"]{ --nc:var(--coral); }
+.home-card[data-color="nova"]{ --nc:var(--nova); }
+.home-card:hover{ transform:translateY(-2px); background:var(--bg-panel-2); }
+.kicker{ text-transform:uppercase; font-size:.7rem; letter-spacing:.1em; color:var(--nc, var(--gold)); font-weight:700; margin-bottom:.5em; }
+.home-card h3{ font-size:1.2rem; margin-bottom:.3em; }
+.home-card-sub{ font-size:.88rem; margin-bottom:1em; }
+.home-card-cta{ font-weight:700; font-size:.85rem; display:inline-flex; align-items:center; gap:6px; color:var(--text); }
+.home-card-cta .icon{ width:.9em; height:.9em; }
+
+/* ---------------- Page head ---------------- */
+.page-head{ padding:8px 0 20px; }
+.page-head h1{ font-size:1.8rem; }
+.page-sub{ max-width:60ch; }
+.back-link{ background:none; border:none; color:var(--text-dim); font-weight:700; padding:14px 0 0; display:inline-flex; gap:6px; align-items:center; font-size:.88rem; }
+.back-link .icon{ transform:rotate(180deg); width:.9em; height:.9em; }
+.back-link:hover{ color:var(--text); }
+
+/* ---------------- Level divider / constellation path ---------------- */
+.level-divider{
+  display:flex; align-items:center; gap:16px; margin:30px 0 14px; padding:14px 18px;
+  background:var(--bg-panel); border:1px dashed var(--line); border-radius:14px;
+  border-left:4px solid var(--nc,var(--gold));
+}
+.level-divider[data-color="teal"]{ --nc:var(--teal); }
+.level-divider[data-color="gold"]{ --nc:var(--gold); }
+.level-divider[data-color="violet"]{ --nc:var(--violet); }
+.level-divider[data-color="coral"]{ --nc:var(--coral); }
+.level-divider[data-color="nova"]{ --nc:var(--nova); }
+.level-num{ font-family:var(--font-mono); font-size:.72rem; color:var(--nc); border:1px solid var(--nc); padding:3px 9px; border-radius:999px; white-space:nowrap; }
+.level-divider h2{ font-size:1.05rem; margin:0; }
+.level-divider p{ font-size:.8rem; margin:0; }
+.level-count{ margin-left:auto; font-family:var(--font-mono); font-size:.85rem; color:var(--text-dim); white-space:nowrap; }
+
+.constellation-path{ list-style:none; margin:0 0 10px; padding:0; position:relative; }
+.constellation-path::before{
+  content:''; position:absolute; left:23px; top:6px; bottom:6px; width:2px;
+  background:repeating-linear-gradient(to bottom, var(--line) 0 6px, transparent 6px 12px);
+}
+.topic-node{
+  position:relative; display:flex; align-items:center; gap:16px; padding:14px 16px 14px 0;
+  border-radius:14px; transition:.15s;
+}
+.topic-node[data-action]{ cursor:pointer; }
+.topic-node[data-action]:hover{ background:var(--bg-panel); }
+.node-star{
+  flex:none; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:var(--bg-panel-2); border:2px solid var(--line); color:var(--text-dimmer); z-index:1;
+}
+.topic-node.unlocked .node-star, .topic-node.progress .node-star{
+  color:#241a04; background:var(--nc,var(--gold)); border-color:var(--nc,var(--gold));
+  box-shadow:0 0 0 4px rgba(240,184,75,.15), 0 0 18px rgba(240,184,75,.35);
+}
+.topic-node[data-color="teal"] .node-star{ --nc:var(--teal); }
+.topic-node[data-color="gold"] .node-star{ --nc:var(--gold); }
+.topic-node[data-color="violet"] .node-star{ --nc:var(--violet); }
+.topic-node[data-color="coral"] .node-star{ --nc:var(--coral); }
+.topic-node[data-color="nova"] .node-star{ --nc:var(--nova); }
+.topic-node.mastered .node-star{ background:var(--good); border-color:var(--good); color:#06210f; box-shadow:0 0 18px rgba(87,214,141,.4); }
+.node-star .icon{ width:20px; height:20px; }
+.node-info{ display:flex; flex-direction:column; gap:2px; }
+.node-title{ font-weight:700; }
+.node-sub{ font-size:.8rem; color:var(--text-dim); }
+.node-arrow{ margin-left:auto; color:var(--text-dimmer); width:16px; height:16px; }
+.topic-node.locked .node-title{ color:var(--text-dimmer); }
+
+/* ---------------- Lesson & quiz cards ---------------- */
+.lesson-wrap{ display:flex; flex-direction:column; gap:16px; margin-bottom:30px; }
+.lesson-card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:16px; padding:22px 24px; }
+.lesson-card h3{ font-size:1.05rem; color:var(--gold); }
+.examples{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+.example{ display:flex; gap:8px; align-items:flex-start; background:var(--bg-panel-2); border-radius:10px; padding:10px 12px; font-size:.9rem; color:var(--text); }
+.example .icon{ color:var(--teal); width:.9em; height:.9em; margin-top:.3em; flex:none; }
+
+.quiz-section h2{ font-size:1.15rem; margin-bottom:14px; }
+.quiz-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+.quiz-card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:8px; }
+.quiz-card.passed{ border-color:rgba(87,214,141,.4); }
+.quiz-card-top{ display:flex; align-items:center; justify-content:space-between; }
+.quiz-diff-badge{ font-family:var(--font-mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; background:var(--bg-panel-3); padding:4px 10px; border-radius:999px; }
+.done-check{ color:var(--good); }
+.quiz-desc{ font-size:.85rem; margin:0; }
+.quiz-status{ font-size:.78rem; color:var(--text-dimmer); margin:0 0 6px; }
+
+/* ---------------- Quiz screen ---------------- */
+.quiz-screen{ max-width:640px; margin:0 auto; padding:10px 0 40px; }
+.quiz-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.quiz-title{ font-weight:700; }
+.quiz-sub-badge{ font-family:var(--font-mono); font-size:.75rem; color:var(--text-dim); background:var(--bg-panel); padding:4px 10px; border-radius:999px; }
+.progress-track{ height:8px; background:var(--bg-panel-3); border-radius:999px; overflow:hidden; margin-bottom:8px; }
+.progress-fill{ height:100%; background:linear-gradient(90deg, var(--teal), var(--gold)); transition:width .3s; }
+.q-count{ font-size:.8rem; color:var(--text-dimmer); }
+.q-text{ font-size:1.3rem; margin:.4em 0 1.1em; }
+.options{ display:flex; flex-direction:column; gap:10px; }
+.opt-btn{ text-align:left; background:var(--bg-panel); border:1px solid var(--line); color:var(--text); padding:14px 16px; border-radius:12px; font-size:.98rem; transition:.15s; }
+.opt-btn:hover:not(:disabled){ background:var(--bg-panel-2); border-color:var(--text-dimmer); }
+.opt-btn.selected{ border-color:var(--gold); background:var(--bg-panel-2); }
+.opt-btn.correct{ border-color:var(--good); background:rgba(87,214,141,.12); }
+.opt-btn.incorrect{ border-color:var(--bad); background:rgba(255,111,111,.12); }
+.fill-wrap{ margin-bottom:6px; }
+.fill-input{ width:100%; padding:14px 16px; border-radius:12px; border:1px solid var(--line); background:var(--bg-panel); color:var(--text); font-size:1rem; }
+.fill-input:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+.fill-feedback{ font-size:.85rem; }
+.feedback{ margin:14px 0; font-weight:700; display:flex; align-items:center; gap:8px; }
+.feedback.good{ color:var(--good); }
+.feedback.bad{ color:var(--bad); }
+.quiz-actions{ margin-top:16px; }
+
+/* ---------------- Result screen ---------------- */
+.result-screen{ max-width:520px; margin:20px auto; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px; }
+.result-ring{ position:relative; margin-bottom:8px; }
+.result-screen h1{ font-size:1.7rem; }
+.result-msg{ max-width:40ch; }
+.result-xp{ font-family:var(--font-mono); font-weight:700; color:var(--gold); }
+.result-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+.new-badges{ margin:10px 0; }
+.new-badges-label{ font-weight:700; color:var(--gold); font-size:.85rem; }
+.badge-row{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+
+.vocab-tools{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:26px; }
+.tool-card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+.tool-card[data-action]{ cursor:pointer; }
+.tool-icon{ width:26px; height:26px; color:var(--gold); }
+.tool-card h3{ font-size:1rem; margin-bottom:.2em; }
+.tool-card p{ font-size:.82rem; margin-bottom:0; }
+.tool-card .btn{ align-self:stretch; }
+
+/* ---------------- Vocabulary ---------------- */
+.vocab-tabs{ display:flex; gap:8px; margin-bottom:20px; }
+.vtab{ background:var(--bg-panel); border:1px solid var(--line); color:var(--text-dim); padding:9px 18px; border-radius:999px; font-weight:700; font-size:.88rem; display:inline-flex; align-items:center; gap:6px; }
+.vtab.active{ background:var(--gold); color:#241a04; border-color:var(--gold); }
+.vtab.disabled{ color:var(--text-dimmer); }
+.empty-note{ background:var(--bg-panel); border:1px dashed var(--line); border-radius:14px; padding:28px; text-align:center; color:var(--text-dim); }
+.vocab-quiz-intro{ background:var(--bg-panel); border-radius:16px; padding:24px; text-align:center; }
+.vocab-quiz-intro .btn{ margin-top:10px; }
+
+.flashcard{ perspective:1200px; height:230px; max-width:440px; margin:0 auto 18px; cursor:pointer; }
+.flashcard-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .5s; }
+.flashcard.flipped .flashcard-inner{ transform:rotateY(180deg); }
+.flashcard-face{ position:absolute; inset:0; backface-visibility:hidden; border-radius:18px; padding:26px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border:1px solid var(--line); }
+.flashcard-face.front{ background:linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel)); }
+.flashcard-face.back{ background:linear-gradient(160deg, var(--bg-panel-3), var(--bg-panel-2)); transform:rotateY(180deg); }
+.fc-pos{ font-family:var(--font-mono); font-size:.75rem; color:var(--gold); margin-bottom:6px; }
+.flashcard-face.front h2{ font-size:2rem; }
+.fc-hint{ font-size:.78rem; color:var(--text-dimmer); }
+.flashcard-face.back h3{ font-size:1.3rem; color:var(--gold); }
+.fc-meaning{ font-weight:600; color:var(--text); }
+.fc-example{ font-style:italic; font-size:.88rem; }
+.fc-syn{ font-size:.78rem; color:var(--text-dimmer); }
+.card-dots{ display:flex; gap:8px; justify-content:center; margin-bottom:14px; }
+.dot{ width:10px; height:10px; border-radius:50%; background:var(--bg-panel-3); border:1px solid var(--line); padding:0; }
+.dot.seen{ background:var(--teal); border-color:var(--teal); }
+.dot.active{ box-shadow:0 0 0 3px rgba(240,184,75,.3); }
+.card-nav{ display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:8px; }
+.card-nav .btn-small{ width:auto; }
+.card-progress{ font-family:var(--font-mono); font-size:.85rem; color:var(--text-dim); }
+.learned-note{ text-align:center; font-size:.85rem; color:var(--good); font-weight:700; }
+.learned-note.dim{ color:var(--text-dimmer); font-weight:500; }
+
+/* ---------------- Progress page ---------------- */
+.progress-top{ display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:center; margin-bottom:30px; }
+.progress-ring-card{ position:relative; display:flex; flex-direction:column; align-items:center; }
+.ring-caption{ font-size:.75rem; color:var(--text-dimmer); margin-top:8px; text-align:center; max-width:16ch; }
+.progress-mini-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.progress-section{ margin-bottom:30px; }
+.progress-section h2{ font-size:1.05rem; margin-bottom:12px; }
+.bar-list{ display:flex; flex-direction:column; gap:10px; }
+.bar-row{ display:grid; grid-template-columns:120px 1fr 50px; align-items:center; gap:10px; }
+.bar-label{ font-size:.85rem; color:var(--text-dim); }
+.bar-track{ height:9px; background:var(--bg-panel-3); border-radius:999px; overflow:hidden; }
+.bar-fill{ height:100%; border-radius:999px; background:var(--gold); transition:width .5s; }
+.bar-fill[data-color="teal"]{ background:var(--teal); }
+.bar-fill[data-color="gold"]{ background:var(--gold); }
+.bar-fill[data-color="violet"]{ background:var(--violet); }
+.bar-fill[data-color="coral"]{ background:var(--coral); }
+.bar-fill[data-color="nova"]{ background:var(--nova); }
+.bar-value{ font-family:var(--font-mono); font-size:.8rem; color:var(--text-dim); text-align:right; }
+
+.badge-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:14px; }
+.badge-card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:14px; padding:16px 12px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; }
+.badge-card.earned .badge-icon{ color:var(--gold); }
+.badge-card.locked{ opacity:.45; }
+.badge-card.locked .badge-icon{ color:var(--text-dimmer); }
+.badge-icon{ width:26px; height:26px; }
+.badge-name{ font-size:.82rem; font-weight:700; }
+.badge-desc{ font-size:.7rem; color:var(--text-dimmer); display:none; }
+.badge-card:hover .badge-desc{ display:block; }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 860px){
+  .hero{ grid-template-columns:1fr; text-align:left; }
+  .hero-ring{ justify-content:flex-start; }
+  .quiz-grid{ grid-template-columns:1fr; }
+  .home-grid{ grid-template-columns:1fr; }
+  .vocab-tools{ grid-template-columns:1fr; }
+  .progress-top{ grid-template-columns:1fr; }
+  .progress-mini-stats{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width: 720px){
+  .main-nav{ display:none; }
+  .mobile-tabbar{
+    display:flex; position:fixed; bottom:0; left:0; right:0; z-index:50;
+    background:var(--bg-panel); border-top:1px solid var(--line); padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+  .tab-btn{ flex:1; background:none; border:none; color:var(--text-dimmer); display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 2px; font-size:.68rem; font-weight:700; border-radius:10px; }
+  .tab-btn .icon{ width:19px; height:19px; }
+  .tab-btn.active{ color:var(--gold); }
+  #root{ padding-bottom:80px; }
+  .quickstats{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width: 520px){
+  .topbar{ padding:14px 0; }
+  .stats-pill .stat:not(.lvl) span{ display:none; }
+  .hero{ padding:24px; border-radius:18px; }
+  .hero h1{ font-size:1.5rem; }
+  .bar-row{ grid-template-columns:90px 1fr 40px; }
+  .quickstats{ grid-template-columns:1fr 1fr; }
+}
+
+</style>
+</head>
+<body>
+<div id="root"><p style="padding:40px;text-align:center;color:#888;">Loading English Quest…</p></div>
+<script>
+/* ============ GRAMMAR DATA ============ */
+const GRAMMAR_LEVELS = [
+{
+  id:'L1', name:'Foundations', tagline:'The first stars of your sky', color:'teal',
+  topics:[
+    {
+      id:'g1', title:'Nouns, Articles & Pronouns',
+      lesson:[
+        {h:'Nouns', p:['A noun names a person, place, thing, or idea. "Teacher", "Paris", "book" and "freedom" are all nouns.','Common nouns name general things (city, dog). Proper nouns name specific things and start with a capital letter (Paris, Rex).'], ex:['The teacher lives in Paris.','My dog, Rex, loves the park.']},
+        {h:'Articles', p:['"A" and "an" are indefinite articles \u2014 use them for one non-specific thing. Use "an" before a vowel sound.','"The" is the definite article \u2014 use it when both speaker and listener know exactly which thing is meant.'], ex:['I saw a cat. An hour later, the cat was gone.','She bought an umbrella because the sky was grey.']},
+        {h:'Pronouns', p:['Pronouns replace nouns so we don\u2019t repeat them. Subject pronouns (I, you, he, she, it, we, they) do the action.','Object pronouns (me, you, him, her, it, us, them) receive the action. Possessive pronouns (mine, yours, his, hers) show ownership.'], ex:['She called him, and he thanked her.','That phone is mine, not yours.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'Which word is a proper noun?', o:['city','London','building','river'], a:'London'},
+          {t:'mcq', q:'Choose the correct article: I need ___ apple.', o:['a','an','the','\u2014'], a:'an'},
+          {t:'mcq', q:'Which is a subject pronoun?', o:['him','her','they','them'], a:'they'},
+          {t:'fill', q:'Complete: ___ dog is barking loudly. (use an article)', a:'the'}
+        ],
+        medium:[
+          {t:'mcq', q:'"The scientists published their findings." \u2014 "their" is a ___ pronoun.', o:['subject','object','possessive','reflexive'], a:'possessive'},
+          {t:'mcq', q:'Which sentence uses articles correctly?', o:['I want the banana, any banana is fine.','I want a banana, any banana is fine.','I want an banana, any banana is fine.','I want banana, any is fine.'], a:'I want a banana, any banana is fine.'},
+          {t:'mcq', q:'Identify the object pronoun: "Give it to ___."', o:['I','she','me','they'], a:'me'},
+          {t:'fill', q:'Complete with the correct pronoun: Sarah lost her keys, so I helped ___ find them.', a:'her'}
+        ],
+        hard:[
+          {t:'mcq', q:'Which sentence has a noun used as an abstract idea (not a physical thing)?', o:['The bridge is long.','Honesty is important.','The car is red.','My shoes are new.'], a:'Honesty is important.'},
+          {t:'mcq', q:'Choose the sentence with correct article use for a unique object.', o:['The sun rises in a east.','A sun rises in the east.','The sun rises in the east.','Sun rises in an east.'], a:'The sun rises in the east.'},
+          {t:'mcq', q:'"Neither of the students finished ___ essay."', o:['their','his or her','they','them'], a:'his or her'},
+          {t:'fill', q:'Rewrite using a pronoun: "Tell John that John\u2019s report is ready." \u2192 Tell John that ___ report is ready.', a:'his'}
+        ]
+      }
+    },
+    {
+      id:'g2', title:'Simple Present Tense',
+      lesson:[
+        {h:'Forming the Simple Present', p:['Use the simple present for habits, facts, and routines. For most subjects, use the base verb.','For he/she/it, add -s or -es to the verb.'], ex:['I walk to school every day.','She walks to school every day.','Water boils at 100\u00b0C.']},
+        {h:'Negatives & Questions', p:['Negatives use do/does + not + base verb. Questions use do/does at the start.'], ex:['They don\u2019t like coffee.','Does he play tennis?']},
+        {h:'Common Time Markers', p:['Words like always, usually, often, sometimes, rarely, never, and every day signal the simple present.'], ex:['We usually eat dinner at seven.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'She ___ (work) at a hospital.', o:['work','works','working','worked'], a:'works'},
+          {t:'mcq', q:'Choose the correct negative: They ___ like spicy food.', o:['doesn\u2019t','don\u2019t','not','isn\u2019t'], a:'don\u2019t'},
+          {t:'mcq', q:'___ you speak French?', o:['Do','Does','Is','Are'], a:'Do'},
+          {t:'fill', q:'Complete: He always ___ (brush) his teeth at night.', a:'brushes'}
+        ],
+        medium:[
+          {t:'mcq', q:'Which sentence is correct?', o:['My brother watch TV every evening.','My brother watches TV every evening.','My brother watching TV every evening.','My brother is watch TV every evening.'], a:'My brother watches TV every evening.'},
+          {t:'mcq', q:'Choose the correct question: ___ the shop open on Sundays?', o:['Do','Does','Is','Has'], a:'Does'},
+          {t:'fill', q:'Negative form: She ___ (not/like) horror movies.', a:'doesn\u2019t like'},
+          {t:'mcq', q:'Which time marker fits: "He ___ goes to the gym."', o:['yesterday','next week','usually','tomorrow'], a:'usually'}
+        ],
+        hard:[
+          {t:'mcq', q:'Spot the error: "The train leave at 6pm every day."', o:['train','leave','at','every'], a:'leave'},
+          {t:'mcq', q:'Which best expresses a general truth?', o:['The Earth is orbiting the sun.','The Earth orbited the sun.','The Earth orbits the sun.','The Earth will orbit the sun.'], a:'The Earth orbits the sun.'},
+          {t:'fill', q:'Correct the sentence: "Does she cooks dinner every night?" \u2192', a:'Does she cook dinner every night?'},
+          {t:'mcq', q:'Which subject needs "-es" with the verb "go"?', o:['I','you','she','we'], a:'she'}
+        ]
+      }
+    },
+    {
+      id:'g3', title:'Simple Past Tense',
+      lesson:[
+        {h:'Regular Verbs', p:['Regular verbs add -ed to form the simple past.'], ex:['I walked to the store.','They played football yesterday.']},
+        {h:'Irregular Verbs', p:['Many common verbs are irregular and change form completely: go\u2192went, see\u2192saw, have\u2192had.'], ex:['She went to Rome last summer.','We had a great time.']},
+        {h:'Negatives & Questions', p:['Negatives use did + not + base verb. Questions start with did, and the main verb returns to its base form.'], ex:['He didn\u2019t call me.','Did you finish the report?']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'Yesterday, I ___ (watch) a movie.', o:['watch','watches','watched','watching'], a:'watched'},
+          {t:'mcq', q:'Choose the correct irregular past: go \u2192', o:['goed','went','gone','going'], a:'went'},
+          {t:'mcq', q:'___ you call her last night?', o:['Do','Did','Does','Done'], a:'Did'},
+          {t:'fill', q:'Negative: They ___ (not/arrive) on time.', a:'didn\u2019t arrive'}
+        ],
+        medium:[
+          {t:'mcq', q:'Which sentence is correct?', o:['She buyed a new car.','She bought a new car.','She buy a new car yesterday.','She has bought a new car yesterday.'], a:'She bought a new car.'},
+          {t:'mcq', q:'"Did he ___ the letter?" (write)', o:['wrote','written','write','writes'], a:'write'},
+          {t:'fill', q:'Past tense of "eat":', a:'ate'},
+          {t:'mcq', q:'Choose the correct question tag structure: "You didn\u2019t see him, ___?"', o:['did you','didn\u2019t you','do you','don\u2019t you'], a:'did you'}
+        ],
+        hard:[
+          {t:'mcq', q:'Find the error: "When I was young, I go to that school."', o:['was','young','go','school'], a:'go'},
+          {t:'mcq', q:'Past tense of "bring":', o:['bringed','brang','brought','bringt'], a:'brought'},
+          {t:'fill', q:'Correct: "She didn\u2019t went to the party." \u2192', a:'She didn\u2019t go to the party.'},
+          {t:'mcq', q:'Which sentence correctly narrates a finished past event?', o:['I have visited Paris in 2015.','I visited Paris in 2015.','I visit Paris in 2015.','I was visiting Paris in 2015 for good.'], a:'I visited Paris in 2015.'}
+        ]
+      }
+    }
+  ]
+},
+{
+  id:'L2', name:'Elementary', tagline:'Connecting the constellations', color:'gold',
+  topics:[
+    {
+      id:'g4', title:'Present Continuous & Future Forms',
+      lesson:[
+        {h:'Present Continuous', p:['Use am/is/are + verb-ing for actions happening right now or temporary situations.'], ex:['I am writing an email.','She is studying for her exam this week.']},
+        {h:'Future with "will"', p:['Use "will" for predictions, spontaneous decisions, and promises.'], ex:['I think it will rain tomorrow.','I\u2019ll help you with that.']},
+        {h:'Future with "going to"', p:['Use "going to" for plans already decided and for predictions based on present evidence.'], ex:['We are going to visit Japan next year.','Look at those clouds \u2014 it\u2019s going to rain.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'Right now, they ___ (play) football.', o:['play','plays','are playing','played'], a:'are playing'},
+          {t:'mcq', q:'I think Spain ___ win the match. (prediction)', o:['is winning','wins','will','won'], a:'will'},
+          {t:'mcq', q:'We ___ (go) to the beach \u2014 it\u2019s all planned.', o:['are going to','will','go','went'], a:'are going to'},
+          {t:'fill', q:'Complete: Listen! Someone ___ (knock) at the door.', a:'is knocking'}
+        ],
+        medium:[
+          {t:'mcq', q:'Which shows a temporary situation (not a permanent fact)?', o:['She lives in Madrid.','She is living in Madrid this semester.','She lived in Madrid.','She has lived in Madrid.'], a:'She is living in Madrid this semester.'},
+          {t:'mcq', q:'A: "The phone is ringing." B: "I ___ get it!" (spontaneous decision)', o:['am going to','will','get','am getting'], a:'will'},
+          {t:'fill', q:'Complete with going to: Look at his face \u2014 he ___ (cry).', a:'is going to cry'},
+          {t:'mcq', q:'Choose the correctly formed question: ___ she working tomorrow?', o:['Does','Is','Do','Has'], a:'Is'}
+        ],
+        hard:[
+          {t:'mcq', q:'Which sentence best expresses a firm, pre-arranged plan?', o:['I will probably travel next month.','I\u2019m travelling to Rome next Friday \u2014 tickets are booked.','I travel to Rome.','I travelled to Rome.'], a:'I\u2019m travelling to Rome next Friday \u2014 tickets are booked.'},
+          {t:'mcq', q:'Spot the error: "She is going to calls you later."', o:['is','going to','calls','later'], a:'calls'},
+          {t:'fill', q:'Correct: "I will to help you tomorrow." \u2192', a:'I will help you tomorrow.'},
+          {t:'mcq', q:'Which best fits a prediction based on visible evidence?', o:['He will fall.','He is falling.','He is going to fall.','He falls.'], a:'He is going to fall.'}
+        ]
+      }
+    },
+    {
+      id:'g5', title:'Prepositions & Conjunctions',
+      lesson:[
+        {h:'Prepositions of Place & Time', p:['Prepositions show relationships: in, on, at, under, between, during, since, for.','Use "at" for exact points, "on" for days/dates, "in" for longer periods.'], ex:['The keys are on the table.','We meet at 5pm on Monday in June.']},
+        {h:'Coordinating Conjunctions', p:['FANBOYS (for, and, nor, but, or, yet, so) join equal ideas.'], ex:['I wanted tea, but there was only coffee.']},
+        {h:'Subordinating Conjunctions', p:['Words like because, although, if, when, since join a main clause to a dependent one.'], ex:['Although it was raining, we went for a walk.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'The meeting is ___ 9am.', o:['in','on','at','since'], a:'at'},
+          {t:'mcq', q:'Choose the coordinating conjunction: I like tea ___ coffee.', o:['because','and','although','since'], a:'and'},
+          {t:'mcq', q:'She was born ___ 1998.', o:['in','on','at','for'], a:'in'},
+          {t:'fill', q:'Complete: We stayed home ___ it was raining. (reason)', a:'because'}
+        ],
+        medium:[
+          {t:'mcq', q:'I haven\u2019t seen him ___ Monday.', o:['for','since','during','at'], a:'since'},
+          {t:'mcq', q:'___ she was tired, she finished the race.', o:['Because','Although','So','And'], a:'Although'},
+          {t:'fill', q:'Complete: He studied hard, ___ he passed the exam.', a:'so'},
+          {t:'mcq', q:'Choose correctly: The cat is hiding ___ the sofa.', o:['under','on','at','since'], a:'under'}
+        ],
+        hard:[
+          {t:'mcq', q:'Which sentence uses "since" correctly to show duration from a point in time?', o:['I have lived here since five years.','I have lived here since 2019.','I have lived here since for years.','I lived here since now.'], a:'I have lived here since 2019.'},
+          {t:'mcq', q:'Combine correctly: "It was late. We kept working." (contrast)', o:['It was late, so we kept working.','It was late, but we kept working.','It was late, for we kept working.','It was late because we kept working.'], a:'It was late, but we kept working.'},
+          {t:'fill', q:'Correct: "Despite it was raining, we left." \u2192', a:'Although it was raining, we left.'},
+          {t:'mcq', q:'Which preposition pair is correct? "We arrived ___ the airport ___ 6pm."', o:['at / at','in / on','at / in','on / at'], a:'at / at'}
+        ]
+      }
+    },
+    {
+      id:'g6', title:'Adjectives, Adverbs & Comparatives',
+      lesson:[
+        {h:'Adjectives & Adverbs', p:['Adjectives describe nouns; adverbs describe verbs, adjectives, or other adverbs, often ending in -ly.'], ex:['She is a careful driver. She drives carefully.']},
+        {h:'Comparatives', p:['Short adjectives add -er + than. Long adjectives use more + than.'], ex:['This bag is bigger than that one.','This course is more difficult than the last one.']},
+        {h:'Superlatives', p:['Short adjectives add the -est. Long adjectives use the most.'], ex:['That was the funniest joke I\u2019ve heard.','It\u2019s the most expensive hotel in town.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'She sings ___ (beautiful).', o:['beautiful','beautifully','more beautiful','beauty'], a:'beautifully'},
+          {t:'mcq', q:'This is ___ (tall) tree in the park.', o:['taller','the tallest','more tall','tall'], a:'the tallest'},
+          {t:'mcq', q:'He is ___ (old) than his brother.', o:['older','oldest','more old','the oldest'], a:'older'},
+          {t:'fill', q:'Complete: This test is ___ (easy) than the last one.', a:'easier'}
+        ],
+        medium:[
+          {t:'mcq', q:'Choose the correct comparative: "expensive"', o:['expensiver','more expensive','expensiest','most expensive'], a:'more expensive'},
+          {t:'mcq', q:'"He drives very ___." (careful)', o:['careful','carefully','carefuller','care'], a:'carefully'},
+          {t:'fill', q:'Superlative of "good":', a:'the best'},
+          {t:'mcq', q:'Which sentence is correct?', o:['She is more happy than before.','She is happier than before.','She is happiest than before.','She is happy than before.'], a:'She is happier than before.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Spot the error: "This is the more interesting book I\u2019ve read."', o:['This','is','the more','I\u2019ve read'], a:'the more'},
+          {t:'mcq', q:'Choose the correct irregular comparative for "bad":', o:['badder','worse','more bad','baddest'], a:'worse'},
+          {t:'fill', q:'Correct: "She runs more fast than me." \u2192', a:'She runs faster than me.'},
+          {t:'mcq', q:'Which adverb correctly modifies the adjective? "It was ___ cold outside."', o:['extreme','extremely','extremer','extremity'], a:'extremely'}
+        ]
+      }
+    }
+  ]
+},
+{
+  id:'L3', name:'Intermediate', tagline:'Charting deeper skies', color:'violet',
+  topics:[
+    {
+      id:'g7', title:'Present Perfect',
+      lesson:[
+        {h:'Form & Use', p:['Present perfect = have/has + past participle. It links the past to the present: experiences, unfinished time periods, and results that matter now.'], ex:['I have visited Japan twice.','She has already finished her homework.']},
+        {h:'Ever, Never, Just, Already, Yet', p:['These words are common companions of the present perfect.'], ex:['Have you ever eaten sushi?','I haven\u2019t called him yet.']},
+        {h:'Present Perfect vs Simple Past', p:['Use simple past for a finished time (yesterday, in 2020). Use present perfect when the time is unspecified or still open (today, this week, ever).'], ex:['I saw that film last year. / I have seen that film.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'She ___ (finish) her homework already.', o:['finish','finished','has finished','finishing'], a:'has finished'},
+          {t:'mcq', q:'___ you ever been to Italy?', o:['Did','Have','Do','Are'], a:'Have'},
+          {t:'mcq', q:'I ___ (not/see) that movie yet.', o:['didn\u2019t see','haven\u2019t seen','don\u2019t see','wasn\u2019t seeing'], a:'haven\u2019t seen'},
+          {t:'fill', q:'Complete: They ___ (live) here since 2015.', a:'have lived'}
+        ],
+        medium:[
+          {t:'mcq', q:'Choose correct: "I ___ my keys yesterday." (specific past time)', o:['have lost','lost','have been losing','lose'], a:'lost'},
+          {t:'mcq', q:'"He has ___ arrived." (word order)', o:['already','yet','ago','since'], a:'already'},
+          {t:'fill', q:'Complete: We ___ (never/try) Thai food before.', a:'have never tried'},
+          {t:'mcq', q:'Which sentence correctly uses "for"?', o:['I have lived here for 2019.','I have lived here for five years.','I have lived here for last year.','I have lived here for now.'], a:'I have lived here for five years.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Choose the sentence that correctly contrasts finished vs. open time.', o:['I have graduated in 2020.','I graduated in 2020.','I graduate in 2020, already.','I have graduate in 2020.'], a:'I graduated in 2020.'},
+          {t:'mcq', q:'"This is the best film I ___ ever seen."', o:['have','has','did','was'], a:'have'},
+          {t:'fill', q:'Correct: "I have seen him yesterday." \u2192', a:'I saw him yesterday.'},
+          {t:'mcq', q:'Which best shows a result relevant now?', o:['I lost my passport last year.','I have lost my passport, so I can\u2019t travel.','I was losing my passport.','I lose my passport.'], a:'I have lost my passport, so I can\u2019t travel.'}
+        ]
+      }
+    },
+    {
+      id:'g8', title:'Past Perfect & Past Continuous',
+      lesson:[
+        {h:'Past Continuous', p:['Was/were + verb-ing describes an action in progress at a specific past moment, often interrupted by another action.'], ex:['I was cooking when the phone rang.']},
+        {h:'Past Perfect', p:['Had + past participle describes an action completed before another past action \u2014 the "past of the past."'], ex:['She had already left when I arrived.']},
+        {h:'Combining Them', p:['Past perfect sets up the earlier event; simple past or past continuous shows what happened next.'], ex:['By the time we arrived, the movie had already started.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'I ___ (sleep) when you called.', o:['sleep','was sleeping','had slept','sleeps'], a:'was sleeping'},
+          {t:'mcq', q:'She ___ (already/eat) when I got home.', o:['already ate','had already eaten','has already eaten','was already eating'], a:'had already eaten'},
+          {t:'mcq', q:'While they ___ (watch) TV, the lights went out.', o:['watch','watched','were watching','had watched'], a:'were watching'},
+          {t:'fill', q:'Complete: By 8pm, the train ___ (leave).', a:'had left'}
+        ],
+        medium:[
+          {t:'mcq', q:'Choose correct order: "___ dinner, we went for a walk."', o:['After we had finished','After we finished had','After finishing had we','After had we finished'], a:'After we had finished'},
+          {t:'mcq', q:'"When I arrived, she ___ for two hours." (wait)', o:['waited','was waiting','had been waiting','has waited'], a:'had been waiting'},
+          {t:'fill', q:'Complete: He ___ (not/finish) his work when the boss arrived.', a:'hadn\u2019t finished'},
+          {t:'mcq', q:'Which shows two simultaneous past actions?', o:['I was reading while she was cooking.','I read while she had cooked.','I had read while she cooked.','I read while she cooks.'], a:'I was reading while she was cooking.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Spot the error: "When I got home, she has already left."', o:['got','has already left','home','she'], a:'has already left'},
+          {t:'mcq', q:'Choose the most precise sentence: "The ground was wet because it ___ ."', o:['rained','was raining','had rained','has rained'], a:'had rained'},
+          {t:'fill', q:'Correct: "She was already gone by the time I had arrived." \u2192', a:'She was already gone by the time I arrived.'},
+          {t:'mcq', q:'Which correctly narrates a sequence of past events?', o:['After she had cooked, she serves dinner.','After she cooked, she had served dinner.','After she had cooked, she served dinner.','After she cooks, she had served dinner.'], a:'After she had cooked, she served dinner.'}
+        ]
+      }
+    },
+    {
+      id:'g9', title:'Modal Verbs',
+      lesson:[
+        {h:'Ability & Possibility', p:['Can/could express ability or possibility. May/might express uncertainty.'], ex:['She can swim very fast.','It might rain later.']},
+        {h:'Obligation & Advice', p:['Must/have to show obligation. Should/ought to give advice.'], ex:['You must wear a seatbelt.','You should see a doctor.']},
+        {h:'Permission & Deduction', p:['Can/may ask permission. Must/can\u2019t express logical deduction.'], ex:['May I leave early?','He must be tired \u2014 he worked all night.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'You ___ eat vegetables to stay healthy. (advice)', o:['should','can','may','must not'], a:'should'},
+          {t:'mcq', q:'She ___ speak three languages. (ability)', o:['must','can','should','might'], a:'can'},
+          {t:'mcq', q:'___ I use your phone? (permission)', o:['Must','May','Should','Will'], a:'May'},
+          {t:'fill', q:'Complete: You ___ (must/not) smoke here. (prohibition)', a:'must not'}
+        ],
+        medium:[
+          {t:'mcq', q:'Choose the modal for strong obligation: "You ___ submit the form by Friday."', o:['might','could','must','may'], a:'must'},
+          {t:'mcq', q:'"It ___ be true \u2014 I saw it myself." (certainty)', o:['might','must','could','may'], a:'must'},
+          {t:'fill', q:'Complete: He ___ (not/have to) come if he\u2019s busy. (no obligation)', a:'doesn\u2019t have to'},
+          {t:'mcq', q:'Which expresses polite advice?', o:['You must see that film.','You ought to see that film.','You can see that film.','You will see that film.'], a:'You ought to see that film.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Choose the sentence expressing past deduction.', o:['He must be at work now.','He must have been at work yesterday.','He must working yesterday.','He must worked yesterday.'], a:'He must have been at work yesterday.'},
+          {t:'mcq', q:'Spot the error: "She can to swim very well."', o:['She','can to','swim','very well'], a:'can to'},
+          {t:'fill', q:'Correct: "You don\u2019t must park here." \u2192', a:'You must not park here.'},
+          {t:'mcq', q:'Which best expresses "it was possible but didn\u2019t happen"?', o:['She could have helped, but she didn\u2019t.','She could help, but she didn\u2019t.','She can help, but she didn\u2019t.','She must have helped, but she didn\u2019t.'], a:'She could have helped, but she didn\u2019t.'}
+        ]
+      }
+    }
+  ]
+},
+{
+  id:'L4', name:'Upper-Intermediate', tagline:'Mapping distant nebulae', color:'coral',
+  topics:[
+    {
+      id:'g10', title:'Passive Voice',
+      lesson:[
+        {h:'Form', p:['Passive = be + past participle. Use it when the action matters more than who did it.'], ex:['The email was sent yesterday.','This bridge was built in 1930.']},
+        {h:'Active vs Passive', p:['Active: subject does the action. Passive: subject receives the action. Add "by + agent" only if it\u2019s important.'], ex:['Active: Workers built the bridge. Passive: The bridge was built (by workers).']},
+        {h:'Passive Across Tenses', p:['The passive can be used in any tense by changing the form of "be".'], ex:['The report is written. / was written. / has been written. / will be written.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'The cake ___ (make) by my mother.', o:['make','made','was made','is making'], a:'was made'},
+          {t:'mcq', q:'Choose the passive: "They clean the office every day."', o:['The office cleans every day.','The office is cleaned every day.','The office was cleaning every day.','The office has clean every day.'], a:'The office is cleaned every day.'},
+          {t:'mcq', q:'This song ___ (write) by a famous artist.', o:['wrote','writes','was written','is write'], a:'was written'},
+          {t:'fill', q:'Rewrite in passive: "Someone stole my bike." \u2192 My bike ___ .', a:'was stolen'}
+        ],
+        medium:[
+          {t:'mcq', q:'Choose the correct passive with agent: "A famous chef cooked this meal."', o:['This meal cooked by a famous chef.','This meal was cooked by a famous chef.','This meal is cooked a famous chef.','This meal has cook by a famous chef.'], a:'This meal was cooked by a famous chef.'},
+          {t:'mcq', q:'"The results ___ announced tomorrow."', o:['will be','will','are being','was'], a:'will be'},
+          {t:'fill', q:'Passive of "They have finished the project.":', a:'The project has been finished.'},
+          {t:'mcq', q:'Which sentence keeps the focus on the action, not the doer?', o:['Someone repaired my car.','My car was repaired.','My car repairs.','My car has repair.'], a:'My car was repaired.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Choose the correctly formed passive question.', o:['Was the letter sent by her?','Did the letter sent by her?','Was the letter send by her?','Has the letter send by her?'], a:'Was the letter sent by her?'},
+          {t:'mcq', q:'Spot the error: "The window was breaking by the storm."', o:['window','was breaking','by','the storm'], a:'was breaking'},
+          {t:'fill', q:'Correct: "The problem is solving by our team." \u2192', a:'The problem is being solved by our team.'},
+          {t:'mcq', q:'Which is the correct passive causative? "I ___ my hair cut yesterday."', o:['had','was had','have had','did had'], a:'had'}
+        ]
+      }
+    },
+    {
+      id:'g11', title:'Conditionals (Zero, First, Second)',
+      lesson:[
+        {h:'Zero Conditional', p:['If + present, present \u2014 for facts and things that are always true.'], ex:['If you heat ice, it melts.']},
+        {h:'First Conditional', p:['If + present, will + base verb \u2014 for real, likely future possibilities.'], ex:['If it rains, we will stay home.']},
+        {h:'Second Conditional', p:['If + past simple, would + base verb \u2014 for hypothetical or unlikely present/future situations.'], ex:['If I won the lottery, I would travel the world.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'If you heat water, it ___ (boil). (fact)', o:['boils','will boil','would boil','boiled'], a:'boils'},
+          {t:'mcq', q:'If it rains tomorrow, we ___ (stay) home.', o:['stay','stayed','will stay','would stay'], a:'will stay'},
+          {t:'mcq', q:'If I ___ (have) more time, I would learn painting.', o:['have','had','will have','has'], a:'had'},
+          {t:'fill', q:'Complete: If she studies hard, she ___ (pass) the exam.', a:'will pass'}
+        ],
+        medium:[
+          {t:'mcq', q:'Choose the correct second conditional: "If I ___ you, I would apologise."', o:['am','was','were','be'], a:'were'},
+          {t:'mcq', q:'"If ice gets warm, it ___ ." (general truth)', o:['melts','will melt','would melt','melted'], a:'melts'},
+          {t:'fill', q:'Complete: If they ___ (invite) me, I would go. (hypothetical)', a:'invited'},
+          {t:'mcq', q:'Which sentence describes a realistic future condition?', o:['If I were rich, I would buy a yacht.','If I save enough money, I will buy a car.','If I saved money, I bought a car.','If I save money, I would buy a car.'], a:'If I save enough money, I will buy a car.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Spot the error: "If I would have more time, I would travel."', o:['If','would have','more time','would travel'], a:'would have'},
+          {t:'mcq', q:'Choose the correctly mixed-tense-free sentence.', o:['If she works hard, she will succeeds.','If she works hard, she will succeed.','If she work hard, she will succeed.','If she worked hard, she will succeed.'], a:'If she works hard, she will succeed.'},
+          {t:'fill', q:'Correct: "If I was you, I will take the job." \u2192', a:'If I were you, I would take the job.'},
+          {t:'mcq', q:'Which conditional type fits: "If you touch fire, you get burned."?', o:['Zero','First','Second','Third'], a:'Zero'}
+        ]
+      }
+    },
+    {
+      id:'g12', title:'Reported Speech & Relative Clauses',
+      lesson:[
+        {h:'Reported Speech: Statements', p:['When reporting the past, tenses usually shift back one step (present\u2192past, past\u2192past perfect), and pronouns/time words adjust.'], ex:['"I am tired," she said. \u2192 She said (that) she was tired.']},
+        {h:'Reported Questions & Commands', p:['Reported questions use statement word order (no auxiliary inversion). Commands use "told/asked + object + to + verb."'], ex:['"Where do you live?" \u2192 He asked where I lived.','"Sit down," she said. \u2192 She told him to sit down.']},
+        {h:'Relative Clauses', p:['Who/which/that/whose/where add extra information about a noun.'], ex:['The woman who called you is my aunt.','This is the house where I grew up.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'"I like tea," he said. \u2192 He said (that) he ___ tea.', o:['like','likes','liked','liking'], a:'liked'},
+          {t:'mcq', q:'Choose the correct relative pronoun: "The man ___ called is my uncle."', o:['which','who','whose','where'], a:'who'},
+          {t:'mcq', q:'"I am busy," she said. \u2192 She said she ___ busy.', o:['is','was','be','were'], a:'was'},
+          {t:'fill', q:'Complete: This is the book ___ I told you about. (relative pronoun for things)', a:'that'}
+        ],
+        medium:[
+          {t:'mcq', q:'"Where do you work?" he asked. \u2192 He asked ___ .', o:['where do I work','where I worked','where did I work','where I work'], a:'where I worked'},
+          {t:'mcq', q:'"Close the door," she said. \u2192 She told him ___ .', o:['close the door','to close the door','closing the door','closed the door'], a:'to close the door'},
+          {t:'fill', q:'Complete: The house ___ roof is red belongs to my grandmother. (possessive relative pronoun)', a:'whose'},
+          {t:'mcq', q:'Which sentence correctly reports a yes/no question?', o:['He asked if I was ready.','He asked was I ready.','He asked that I was ready.','He asked if was I ready.'], a:'He asked if I was ready.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Spot the error: "She said that she will call me tomorrow."', o:['said','that she','will call','tomorrow'], a:'will call'},
+          {t:'mcq', q:'Choose the correctly reported command: "Don\u2019t touch that," he warned.', o:['He warned me not to touch that.','He warned me don\u2019t touch that.','He warned that not touch that.','He warned to not touching that.'], a:'He warned me not to touch that.'},
+          {t:'fill', q:'Correct: "The car which engine is broken is mine." \u2192', a:'The car whose engine is broken is mine.'},
+          {t:'mcq', q:'Which uses a non-defining relative clause correctly (extra, non-essential info)?', o:['My brother who lives in Rome is a chef.','My brother, who lives in Rome, is a chef.','My brother which lives in Rome is a chef.','My brother whose lives in Rome is a chef.'], a:'My brother, who lives in Rome, is a chef.'}
+        ]
+      }
+    }
+  ]
+},
+{
+  id:'L5', name:'Advanced', tagline:'Reaching the outer galaxy', color:'nova',
+  topics:[
+    {
+      id:'g13', title:'Third & Mixed Conditionals',
+      lesson:[
+        {h:'Third Conditional', p:['If + past perfect, would have + past participle \u2014 for imagined changes to the unchangeable past.'], ex:['If I had studied, I would have passed the exam.']},
+        {h:'Mixed Conditionals', p:['Mixes a past condition with a present result, or a present condition with a past result.'], ex:['If I had taken that job, I would be rich now. (past condition, present result)']},
+        {h:'Common Pitfalls', p:['Never use "would" in the if-clause. Keep the past-perfect / would-have pattern consistent unless mixing deliberately.'], ex:['Incorrect: If I would have known... Correct: If I had known...']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'If I ___ (know) about the party, I would have gone.', o:['know','knew','had known','would know'], a:'had known'},
+          {t:'mcq', q:'If she had left earlier, she ___ (catch) the train.', o:['catches','would catch','would have caught','caught'], a:'would have caught'},
+          {t:'mcq', q:'If they ___ (not/miss) the flight, they would have arrived on time.', o:['didn\u2019t miss','hadn\u2019t missed','wouldn\u2019t miss','haven\u2019t missed'], a:'hadn\u2019t missed'},
+          {t:'fill', q:'Complete: If I had saved money, I ___ (buy) a car.', a:'would have bought'}
+        ],
+        medium:[
+          {t:'mcq', q:'Mixed conditional: "If I ___ harder at school, I would have a better job now."', o:['studied','had studied','would study','study'], a:'had studied'},
+          {t:'mcq', q:'"If she weren\u2019t so busy now, she ___ (help) us yesterday." (mixed, present cause/past result is unusual \u2014 pick most natural)', o:['would help','would have helped','helped','helps'], a:'would have helped'},
+          {t:'fill', q:'Complete: If he had listened to advice, he ___ (not/lose) his money.', a:'wouldn\u2019t have lost'},
+          {t:'mcq', q:'Which sentence is a correct third conditional?', o:['If I had more time, I would have finished.','If I have had more time, I would finish.','If I had had more time, I would have finished.','If I had had more time, I would finish.'], a:'If I had had more time, I would have finished.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Spot the error: "If I would have seen you, I would have said hi."', o:['If I','would have seen','would have said','hi'], a:'would have seen'},
+          {t:'mcq', q:'Choose the correct mixed conditional: past condition \u2192 present result.', o:['If I hadn\u2019t married young, I would have travelled more.','If I hadn\u2019t married young, I would travel more now.','If I don\u2019t marry young, I would travel more now.','If I hadn\u2019t married young, I travel more now.'], a:'If I hadn\u2019t married young, I would travel more now.'},
+          {t:'fill', q:'Correct: "If she was here, she would have helped us yesterday." \u2192', a:'If she had been here, she would have helped us yesterday.'},
+          {t:'mcq', q:'Which best expresses regret about a past action with present relevance?', o:['If I had taken that course, I would understand this better now.','If I take that course, I understand this better now.','If I took that course, I would understand this better now.','If I have taken that course, I understand this better.'], a:'If I had taken that course, I would understand this better now.'}
+        ]
+      }
+    },
+    {
+      id:'g14', title:'Gerunds, Infinitives & Subjunctive',
+      lesson:[
+        {h:'Gerunds vs Infinitives', p:['Some verbs take a gerund (enjoy, avoid, finish), some take an infinitive (want, decide, plan), and some take either with a meaning change (stop, remember, try).'], ex:['She enjoys reading. / She wants to read.','He stopped smoking. (quit) vs He stopped to smoke. (paused in order to)']},
+        {h:'Subjunctive Mood', p:['The subjunctive uses the base verb form after certain expressions of importance, demand, or suggestion (suggest, insist, recommend, essential that).'], ex:['The doctor recommended that he rest.','It is essential that she be informed.']},
+        {h:'Formal "Were"', p:['The subjunctive "were" replaces "was" in formal hypothetical statements for all subjects.'], ex:['If I were president, I would change that law.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'She enjoys ___ (read) novels.', o:['read','to read','reading','reads'], a:'reading'},
+          {t:'mcq', q:'He decided ___ (leave) early.', o:['leave','leaving','to leave','left'], a:'to leave'},
+          {t:'mcq', q:'They avoid ___ (eat) sugar.', o:['eat','to eat','eating','ate'], a:'eating'},
+          {t:'fill', q:'Complete: I want ___ (learn) Spanish. (infinitive)', a:'to learn'}
+        ],
+        medium:[
+          {t:'mcq', q:'"He stopped ___ a cigarette." (paused his walk in order to smoke)', o:['smoking','to smoke','smoke','smoked'], a:'to smoke'},
+          {t:'mcq', q:'The teacher insisted that he ___ (submit) the assignment. (subjunctive)', o:['submits','submitted','submit','will submit'], a:'submit'},
+          {t:'fill', q:'Complete: It is important that she ___ (be) on time. (subjunctive)', a:'be'},
+          {t:'mcq', q:'Which sentence is correct?', o:['I look forward to meet you.','I look forward to meeting you.','I look forward meeting you.','I look forward met you.'], a:'I look forward to meeting you.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Choose the sentence with correct subjunctive after "recommend."', o:['She recommended that he goes home.','She recommended that he go home.','She recommended that he going home.','She recommended he to go home.'], a:'She recommended that he go home.'},
+          {t:'mcq', q:'Spot the difference: "He remembered locking the door" vs "He remembered to lock the door" \u2014 which describes a past action he recalls doing?', o:['locking the door','to lock the door','both mean the same','neither'], a:'locking the door'},
+          {t:'fill', q:'Correct: "If I was rich, I would donate more." (formal subjunctive) \u2192', a:'If I were rich, I would donate more.'},
+          {t:'mcq', q:'Which verb pattern is correct? "I can\u2019t help ___ ."', o:['to laugh','laugh','laughing','laughed'], a:'laughing'}
+        ]
+      }
+    },
+    {
+      id:'g15', title:'Inversion, Emphasis & Advanced Passive',
+      lesson:[
+        {h:'Negative Inversion', p:['Starting a sentence with a negative adverb (Never, Rarely, Not only, Seldom) triggers subject-auxiliary inversion for emphasis.'], ex:['Never have I seen such a mess.','Not only did she win, but she also broke the record.']},
+        {h:'Emphatic Structures', p:['Cleft sentences (It is... that / What... is) place emphasis on a specific part of the sentence.'], ex:['It was Maria who solved the puzzle.','What I need is a break.']},
+        {h:'Causative & Advanced Passive', p:['"Have/get something done" shows someone else performs a service for the subject.'], ex:['I had my car repaired.','We are getting the house painted.']}
+      ],
+      quizzes:{
+        easy:[
+          {t:'mcq', q:'Never ___ I seen such a beautiful sunset.', o:['have','has','did','do'], a:'have'},
+          {t:'mcq', q:'It was Tom ___ broke the window.', o:['who','whom','whose','which'], a:'who'},
+          {t:'mcq', q:'I had my hair ___ (cut) yesterday.', o:['cut','to cut','cutting','cuts'], a:'cut'},
+          {t:'fill', q:'Complete: Not only ___ she sing, she also danced. (inversion)', a:'did'}
+        ],
+        medium:[
+          {t:'mcq', q:'Rewrite for emphasis: "I need a holiday." \u2192', o:['What I need is a holiday.','It I need is a holiday.','What need I is a holiday.','A holiday what I need.'], a:'What I need is a holiday.'},
+          {t:'mcq', q:'Choose the correct inversion: "Rarely ___ such dedication."', o:['I have seen','have I seen','I saw','did I saw'], a:'have I seen'},
+          {t:'fill', q:'Complete: We are having the kitchen ___ (renovate) next month.', a:'renovated'},
+          {t:'mcq', q:'Which sentence uses a cleft structure correctly?', o:['It was in Paris where we met.','It was in Paris that we met.','It Paris was that we met.','That was Paris we met.'], a:'It was in Paris that we met.'}
+        ],
+        hard:[
+          {t:'mcq', q:'Spot the error: "Seldom she visits her grandparents."', o:['Seldom','she visits','her','grandparents'], a:'she visits'},
+          {t:'mcq', q:'Choose the correct advanced causative: "He ___ his suit dry-cleaned before the interview."', o:['had','made','did','got done'], a:'had'},
+          {t:'fill', q:'Correct: "Not until she apologized I forgave her." \u2192', a:'Not until she apologized did I forgive her.'},
+          {t:'mcq', q:'Which sentence correctly combines inversion with a conditional meaning ("If I had known")?', o:['Had I known, I would have called.','Have I known, I would have called.','I had known, I would have called.','Did I know, I would have called.'], a:'Had I known, I would have called.'}
+        ]
+      }
+    }
+  ]
+}
+];
+
+/* ============ VOCABULARY DATA ============ */
+/* Each level = one "Day". 5 words, a meaning, example sentence, part of speech, and a synonym. */
+const VOCAB_LEVELS = [
+  { id:'v1', day:1, words:[
+    {w:'Abundant', pos:'adj.', m:'Existing in large quantities; plentiful.', ex:'The region has abundant natural resources.', syn:'plentiful'},
+    {w:'Candid', pos:'adj.', m:'Truthful and straightforward; frank.', ex:'She gave a candid answer about the delay.', syn:'frank'},
+    {w:'Diligent', pos:'adj.', m:'Showing care and steady effort in work.', ex:'He is a diligent student who never misses a deadline.', syn:'hard-working'},
+    {w:'Endeavor', pos:'v./n.', m:'To try hard to achieve something.', ex:'They endeavor to finish the project on time.', syn:'attempt'},
+    {w:'Fickle', pos:'adj.', m:'Changing frequently, especially in loyalty or opinion.', ex:'The weather here is fickle \u2014 sunny one minute, raining the next.', syn:'changeable'}
+  ]},
+  { id:'v2', day:2, words:[
+    {w:'Gratitude', pos:'n.', m:'The quality of being thankful.', ex:'She expressed her gratitude for their support.', syn:'thankfulness'},
+    {w:'Hostile', pos:'adj.', m:'Unfriendly or antagonistic.', ex:'The crowd grew hostile after the announcement.', syn:'antagonistic'},
+    {w:'Impartial', pos:'adj.', m:'Treating all sides equally; not biased.', ex:'A judge must remain impartial.', syn:'unbiased'},
+    {w:'Jubilant', pos:'adj.', m:'Feeling or expressing great happiness.', ex:'The team was jubilant after winning the cup.', syn:'elated'},
+    {w:'Keen', pos:'adj.', m:'Having a strong interest or enthusiasm.', ex:'He is keen to learn new languages.', syn:'eager'}
+  ]},
+  { id:'v3', day:3, words:[
+    {w:'Lucid', pos:'adj.', m:'Clear and easy to understand.', ex:'Her explanation was lucid and simple to follow.', syn:'clear'},
+    {w:'Meticulous', pos:'adj.', m:'Very careful and precise about details.', ex:'He is meticulous when checking his reports.', syn:'thorough'},
+    {w:'Novel', pos:'adj.', m:'New and original; not seen before.', ex:'They proposed a novel solution to the problem.', syn:'original'},
+    {w:'Obsolete', pos:'adj.', m:'No longer in use; outdated.', ex:'That software is now obsolete.', syn:'outdated'},
+    {w:'Pragmatic', pos:'adj.', m:'Dealing with things sensibly and realistically.', ex:'We need a pragmatic approach to this issue.', syn:'practical'}
+  ]},
+  { id:'v4', day:4, words:[
+    {w:'Quaint', pos:'adj.', m:'Attractively unusual or old-fashioned.', ex:'They stayed in a quaint little cottage.', syn:'charming'},
+    {w:'Resilient', pos:'adj.', m:'Able to recover quickly from difficulties.', ex:'Children are often remarkably resilient.', syn:'tough'},
+    {w:'Scrutinize', pos:'v.', m:'To examine something closely and carefully.', ex:'The auditor scrutinized every invoice.', syn:'inspect'},
+    {w:'Tedious', pos:'adj.', m:'Too long, slow, or dull; tiresome.', ex:'Filling out the forms was a tedious task.', syn:'monotonous'},
+    {w:'Unanimous', pos:'adj.', m:'Fully agreed on by everyone.', ex:'The board reached a unanimous decision.', syn:'united'}
+  ]},
+  { id:'v5', day:5, words:[
+    {w:'Versatile', pos:'adj.', m:'Able to adapt to many functions or activities.', ex:'She is a versatile actor who plays many roles.', syn:'adaptable'},
+    {w:'Whimsical', pos:'adj.', m:'Playfully quaint or fanciful.', ex:'The story had a whimsical, dreamlike quality.', syn:'fanciful'},
+    {w:'Zealous', pos:'adj.', m:'Showing great energy and enthusiasm for a cause.', ex:'He is a zealous supporter of environmental causes.', syn:'passionate'},
+    {w:'Ambiguous', pos:'adj.', m:'Open to more than one interpretation; unclear.', ex:'His answer was ambiguous, so we asked again.', syn:'vague'},
+    {w:'Benevolent', pos:'adj.', m:'Kind and generous; wishing to do good.', ex:'The benevolent donor funded the new school.', syn:'kind'}
+  ]},
+  { id:'v6', day:6, words:[
+    {w:'Coherent', pos:'adj.', m:'Logical and consistent; easy to follow.', ex:'He gave a coherent explanation of the plan.', syn:'logical'},
+    {w:'Deteriorate', pos:'v.', m:'To become progressively worse.', ex:'Her health began to deteriorate last winter.', syn:'worsen'},
+    {w:'Eloquent', pos:'adj.', m:'Fluent and persuasive in speaking or writing.', ex:'She delivered an eloquent speech at the ceremony.', syn:'articulate'},
+    {w:'Frugal', pos:'adj.', m:'Careful and economical with money or resources.', ex:'He lives a frugal lifestyle to save for retirement.', syn:'thrifty'},
+    {w:'Gregarious', pos:'adj.', m:'Fond of company; sociable.', ex:'She\u2019s gregarious and makes friends easily.', syn:'sociable'}
+  ]},
+  { id:'v7', day:7, words:[
+    {w:'Hinder', pos:'v.', m:'To create difficulty for someone or something; obstruct.', ex:'Bad weather hindered our progress.', syn:'obstruct'},
+    {w:'Innate', pos:'adj.', m:'Existing from birth; natural, not acquired.', ex:'She has an innate talent for music.', syn:'inborn'},
+    {w:'Judicious', pos:'adj.', m:'Having or showing good judgment; sensible.', ex:'He made a judicious choice by saving the extra income.', syn:'sensible'},
+    {w:'Latent', pos:'adj.', m:'Present but not yet developed or visible.', ex:'The workshop revealed her latent creativity.', syn:'hidden'},
+    {w:'Meager', pos:'adj.', m:'Lacking in quantity or quality; scanty.', ex:'They survived on a meager food supply.', syn:'scanty'}
+  ]},
+  { id:'v8', day:8, words:[
+    {w:'Nostalgic', pos:'adj.', m:'Feeling sentimental longing for the past.', ex:'The old photos made her feel nostalgic.', syn:'sentimental'},
+    {w:'Optimal', pos:'adj.', m:'Best or most favorable under given conditions.', ex:'We need the optimal solution for this budget.', syn:'ideal'},
+    {w:'Plausible', pos:'adj.', m:'Seeming reasonable or probable.', ex:'His excuse sounded plausible at first.', syn:'credible'},
+    {w:'Quandary', pos:'n.', m:'A state of uncertainty about what to do.', ex:'She was in a quandary over which job to accept.', syn:'dilemma'},
+    {w:'Reluctant', pos:'adj.', m:'Unwilling and hesitant to do something.', ex:'He was reluctant to speak in public.', syn:'unwilling'}
+  ]},
+  { id:'v9', day:9, words:[
+    {w:'Substantial', pos:'adj.', m:'Of considerable size, value, or importance.', ex:'They made a substantial donation to the charity.', syn:'significant'},
+    {w:'Tentative', pos:'adj.', m:'Not certain or fixed; provisional.', ex:'We made a tentative plan to meet on Friday.', syn:'provisional'},
+    {w:'Unprecedented', pos:'adj.', m:'Never done or known before.', ex:'The company saw unprecedented growth this year.', syn:'unparalleled'},
+    {w:'Vigilant', pos:'adj.', m:'Keeping careful watch for possible danger.', ex:'Security guards remained vigilant throughout the night.', syn:'watchful'},
+    {w:'Wary', pos:'adj.', m:'Cautious about possible dangers or problems.', ex:'She was wary of strangers offering deals.', syn:'cautious'}
+  ]},
+  { id:'v10', day:10, words:[
+    {w:'Adversity', pos:'n.', m:'Difficulties or misfortune.', ex:'She stayed strong through years of adversity.', syn:'hardship'},
+    {w:'Concise', pos:'adj.', m:'Giving information clearly in few words.', ex:'Please keep your report concise.', syn:'brief'},
+    {w:'Empathy', pos:'n.', m:'The ability to understand and share the feelings of another.', ex:'A good nurse shows empathy to every patient.', syn:'compassion'},
+    {w:'Fortitude', pos:'n.', m:'Courage in facing pain or adversity.', ex:'He faced the illness with great fortitude.', syn:'courage'},
+    {w:'Genuine', pos:'adj.', m:'Truly what it is said to be; authentic and sincere.', ex:'Her smile was genuine and warm.', syn:'authentic'}
+  ]}
+];
+
+/* ============================================================
+   ENGLISH QUEST — engine.js
+   Vanilla JS SPA: state, gamification, rendering, quizzes.
+   ============================================================ */
+
+/* ---------- Flatten grammar topics with global order/index ---------- */
+const GRAMMAR_FLAT = [];
+GRAMMAR_LEVELS.forEach((lvl, li) => {
+  lvl.topics.forEach((tp, ti) => {
+    GRAMMAR_FLAT.push({ levelIdx: li, levelId: lvl.id, levelName: lvl.name, levelColor: lvl.color, topic: tp, topicIdx: GRAMMAR_FLAT.length });
+  });
+});
+
+const BADGES = [
+  { id:'first_star', name:'First Star', desc:'Pass your very first quiz.', icon:'star' },
+  { id:'foundations_done', name:'Foundation Setter', desc:'Master every topic in Foundations.', icon:'anchor' },
+  { id:'wordsmith_10', name:'Wordsmith', desc:'Learn 10 vocabulary words.', icon:'book' },
+  { id:'wordsmith_25', name:'Lexicon Builder', desc:'Learn 25 vocabulary words.', icon:'books' },
+  { id:'vocab_champion', name:'Vocabulary Champion', desc:'Pass every vocabulary day.', icon:'crown' },
+  { id:'perfectionist', name:'Perfectionist', desc:'Score 100% on a hard quiz.', icon:'diamond' },
+  { id:'streak_3', name:'Warming Up', desc:'Keep a 3-day streak.', icon:'flame' },
+  { id:'streak_7', name:'On Fire', desc:'Keep a 7-day streak.', icon:'fire' },
+  { id:'halfway_hero', name:'Halfway Hero', desc:'Master half of all grammar topics.', icon:'compass' },
+  { id:'grammar_master', name:'Grammar Master', desc:'Master every grammar topic in the sky.', icon:'galaxy' },
+  { id:'placement_ace', name:'Sharp Starter', desc:'Ace the vocabulary placement test with a perfect score.', icon:'telescope' },
+  { id:'vocab_reviewer', name:'Sky Reviewer', desc:'Score 90%+ on a cumulative vocabulary review.', icon:'bulb' }
+];
+
+const LEVEL_TITLES = ['Stargazer','Wordling','Sky Apprentice','Grammar Voyager','Constellation Scout','Nebula Navigator','Sentence Cartographer','Lexicon Pilot','Sky Sage','Galactic Linguist'];
+
+const PASS_RATIO = 0.7;     // grammar quizzes: need >=70% correct
+const VOCAB_PASS_RATIO = 0.8; // vocab quiz: need >=80% correct (4/5)
+const XP = { easy:10, medium:20, hard:30, vocab:15, learn:5 };
+
+const STORAGE_KEY = 'englishquest_state_v2';
+
+function defaultState(){
+  return {
+    xp: 0,
+    badges: [],
+    streak: 0,
+    longestStreak: 0,
+    lastActive: null,
+    grammar: { unlockedIdx: 0, topics: {} },
+    vocab: { unlockedIdx: 0, levels: {}, placementDone: false, reviewPassed: false, reviewBest: 0 }
+  };
+}
+
+var STATE = loadState();
+touchStreak();
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    return Object.assign(defaultState(), parsed);
+  }catch(e){ return defaultState(); }
+}
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); }catch(e){}
+}
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+function touchStreak(){
+  const today = todayStr();
+  if(STATE.lastActive === today) return;
+  if(!STATE.lastActive){
+    STATE.streak = 1;
+  } else {
+    const last = new Date(STATE.lastActive.replace(/-/g,'/'));
+    const now = new Date(today.replace(/-/g,'/'));
+    const diffDays = Math.round((now - last) / 86400000);
+    if(diffDays === 1) STATE.streak += 1;
+    else if(diffDays > 1) STATE.streak = 1;
+  }
+  STATE.lastActive = today;
+  if(STATE.streak > STATE.longestStreak) STATE.longestStreak = STATE.streak;
+  checkStreakBadges();
+  saveState();
+}
+
+function addXP(n){
+  STATE.xp += n;
+  saveState();
+}
+function userLevelInfo(){
+  const perLevel = 150;
+  const lvl = Math.floor(STATE.xp / perLevel);
+  const into = STATE.xp % perLevel;
+  const title = LEVEL_TITLES[Math.min(lvl, LEVEL_TITLES.length-1)];
+  return { level: lvl+1, title, into, need: perLevel, pct: Math.round((into/perLevel)*100) };
+}
+function awardBadge(id){
+  if(!STATE.badges.includes(id)){
+    STATE.badges.push(id);
+    saveState();
+    return true;
+  }
+  return false;
+}
+function checkStreakBadges(){
+  if(STATE.streak >= 3) awardBadge('streak_3');
+  if(STATE.streak >= 7) awardBadge('streak_7');
+}
+
+function topicProg(topicId){
+  if(!STATE.grammar.topics[topicId]) STATE.grammar.topics[topicId] = { easy:{passed:false,best:0}, medium:{passed:false,best:0}, hard:{passed:false,best:0} };
+  return STATE.grammar.topics[topicId];
+}
+function vocabProg(levelId){
+  if(!STATE.vocab.levels[levelId]) STATE.vocab.levels[levelId] = { learned:false, quizPassed:false, best:0 };
+  return STATE.vocab.levels[levelId];
+}
+
+function isTopicUnlocked(idx){ return idx <= STATE.grammar.unlockedIdx; }
+function isVocabUnlocked(idx){ return idx <= STATE.vocab.unlockedIdx; }
+
+function totalTopicsMastered(){
+  return GRAMMAR_FLAT.filter(g => topicProg(g.topic.id).hard.passed).length;
+}
+function totalVocabLearned(){
+  let n = 0;
+  VOCAB_LEVELS.forEach(lv => { if(vocabProg(lv.id).learned) n += lv.words.length; });
+  return n;
+}
+function checkMilestoneBadges(){
+  const mastered = totalTopicsMastered();
+  const learned = totalVocabLearned();
+  if(learned >= 10) awardBadge('wordsmith_10');
+  if(learned >= 25) awardBadge('wordsmith_25');
+  if(VOCAB_LEVELS.every(lv => vocabProg(lv.id).quizPassed)) awardBadge('vocab_champion');
+  if(GRAMMAR_LEVELS[0].topics.every(tp => topicProg(tp.id).hard.passed)) awardBadge('foundations_done');
+  if(mastered >= Math.ceil(GRAMMAR_FLAT.length/2)) awardBadge('halfway_hero');
+  if(mastered === GRAMMAR_FLAT.length) awardBadge('grammar_master');
+}
+
+function normalizeAnswer(s){
+  return (s||'').toLowerCase().trim().replace(/[.!?]+$/,'').replace(/\s+/g,' ').replace(/['\u2019]/g,'\u2019');
+}
+
+/* ---------------- Icons (inline SVG, currentColor) ---------------- */
+const ICONS = {
+  star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 21l1.7-7-5.4-4.7 7.1-.6z"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10V7a5 5 0 0110 0v3h1a1 1 0 011 1v9a1 1 0 01-1 1H6a1 1 0 01-1-1v-9a1 1 0 011-1h1zm2 0h6V7a3 3 0 00-6 0v3z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg>',
+  book:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4.5A2.5 2.5 0 016.5 2H20v17H6.5A2.5 2.5 0 004 21.5v-17zM6.5 4A.5.5 0 006 4.5V17a2.5 2.5 0 011.9-.9H18V4H6.5z"/></svg>',
+  books:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h6v16H3zM11 4h6v16h-6zM19 5.2l3.6 15.6-2.9.7L16.1 5.9z"/></svg>',
+  crown:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18l1-9-6 4-4-7-4 7-6-4z"/></svg>',
+  diamond:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>',
+  flame:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3-3 4-3 8a3 3 0 006 0c0-1-1-2-1-2 2 1 4 4 4 7a6 6 0 01-12 0c0-5 3-6 6-13z"/></svg>',
+  fire:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1.5 4-3.5 5-3.5 10a3.5 3.5 0 007 0c0-1.3-1-2.6-1-2.6 2.6 1.4 5 5 5 8.6a7.5 7.5 0 01-15 0C4.5 11.5 8.5 9 12 2z"/></svg>',
+  compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6z" fill="currentColor" stroke="none"/></svg>',
+  galaxy:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="7" r="1.3"/><circle cx="20" cy="6" r="1"/><circle cx="19" cy="18" r="1.4"/><circle cx="4" cy="18" r="1"/></svg>',
+  anchor:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2"/><path d="M12 7v14M6 12H2a10 10 0 0010 9 10 10 0 0010-9h-4M6 12a6 6 0 006 6M18 12a6 6 0 01-6 6"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  trophy:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3h10v4a5 5 0 01-5 5 5 5 0 01-5-5V3zm5 9v3m-4 0h8m-8 3h8m-4-3v3M4 4h3v3a4 4 0 01-3-3zm16 0h-3v3a4 4 0 003-3z"/></svg>',
+  arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  bulb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.5.4.8 1 .8 1.6h5.4c0-.6.3-1.2.8-1.6A6 6 0 0012 3z"/></svg>',
+  telescope:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l4-4M14 3l7 7-9 9-7-7z"/><circle cx="7" cy="17" r="2"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5z"/></svg>'
+};
+function ic(name, cls){ return '<span class="icon '+(cls||'')+'">'+ICONS[name]+'</span>'; }
+
+/* ---------------- Vocabulary quiz generator ---------------- */
+const VOCAB_POOL = [];
+VOCAB_LEVELS.forEach(lv => lv.words.forEach(w => VOCAB_POOL.push(w)));
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function generateVocabQuiz(levelId){
+  const lv = VOCAB_LEVELS.find(l=>l.id===levelId);
+  const qs = [];
+  lv.words.forEach((word, i) => {
+    const others = shuffle(VOCAB_POOL.filter(w=>w.w!==word.w)).slice(0,3);
+    if(i % 2 === 0){
+      const options = shuffle([word.m, ...others.map(o=>o.m)]);
+      qs.push({ t:'mcq', q:'What does "'+word.w+'" mean?', o: options, a: word.m });
+    } else {
+      const blanked = word.ex.replace(new RegExp(word.w, 'i'), '_____');
+      const options = shuffle([word.w, ...others.map(o=>o.w)]);
+      qs.push({ t:'mcq', q:'Fill in the blank: '+blanked, o: options, a: word.w });
+    }
+  });
+  return qs;
+}
+function makeWordQuestion(word, altIdx){
+  const others = shuffle(VOCAB_POOL.filter(w=>w.w!==word.w)).slice(0,3);
+  if(altIdx % 2 === 0){
+    const options = shuffle([word.m, ...others.map(o=>o.m)]);
+    return { t:'mcq', q:'What does "'+word.w+'" mean?', o: options, a: word.m };
+  }
+  const blanked = word.ex.replace(new RegExp(word.w, 'i'), '_____');
+  const options = shuffle([word.w, ...others.map(o=>o.w)]);
+  return { t:'mcq', q:'Fill in the blank: '+blanked, o: options, a: word.w };
+}
+/* Placement test: one word sampled from every day (easy day 1 -> hard day 10) so the
+   score maps directly onto how many days the learner can skip ahead. */
+function generatePlacementQuiz(){
+  return VOCAB_LEVELS.map((lv, i) => makeWordQuestion(pick(lv.words), i));
+}
+/* Cumulative review: draws from every day already marked "learned", up to 10 words,
+   for ongoing reinforcement. Does not affect unlocking, only badges/XP. */
+function generateCumulativeReviewQuiz(){
+  const learnedWords = [];
+  VOCAB_LEVELS.forEach(lv => { if(vocabProg(lv.id).learned) learnedWords.push(...lv.words); });
+  const sample = shuffle(learnedWords).slice(0, Math.min(10, learnedWords.length));
+  return sample.map((w,i) => makeWordQuestion(w, i));
+}
+
+
+/* ================= UI STATE & ROUTER ================= */
+var UI = { view:'home', topicId:null, vocabId:null, vocabTab:'learn', cardIdx:0, viewedCards:new Set(), quiz:null };
+
+const PASS_MSGS = ['Stellar work! You\u2019ve earned your place among the stars.','Bright and brilliant! That was a clean pass.','You lit up that quiz! Keep climbing.','Excellent! Your sky is getting brighter.'];
+const FAIL_MSGS = ['So close! Review the lesson and try again \u2014 every attempt sharpens your aim.','Not quite there yet, but you\u2019re closer than you think. Give it another go!','A few stars short of unlocking. Revisit the lesson and reattempt when ready.','Keep going! Mastery takes a few orbits. Try again.'];
+
+function withBadgeDiff(fn){
+  const before = STATE.badges.slice();
+  fn();
+  return STATE.badges.filter(b=>!before.includes(b));
+}
+
+function nav(view, extra){
+  UI.view = view;
+  if(extra) Object.assign(UI, extra);
+  render();
+  const root = document.getElementById('root');
+  if(root) root.scrollIntoView({behavior:'instant', block:'start'});
+  window.scrollTo(0,0);
+}
+
+/* ---------- Grammar quiz gating ---------- */
+function diffUnlocked(topicId, diff){
+  const p = topicProg(topicId);
+  if(diff === 'easy') return true;
+  if(diff === 'medium') return p.easy.passed;
+  if(diff === 'hard') return p.medium.passed;
+  return false;
+}
+
+function startGrammarQuiz(topicId, diff){
+  if(!diffUnlocked(topicId, diff)) return;
+  const g = GRAMMAR_FLAT.find(x=>x.topic.id===topicId);
+  const questions = shuffle(g.topic.quizzes[diff]).map(q => q.t==='mcq' ? Object.assign({}, q, {o: shuffle(q.o)}) : q);
+  UI.quiz = { kind:'grammar', topicId, diff, questions, idx:0, correct:0, selected:null, textVal:'', submitted:false };
+  nav('quiz');
+}
+function startVocabQuiz(levelId){
+  const prog = vocabProg(levelId);
+  if(!prog.learned) return;
+  const questions = generateVocabQuiz(levelId);
+  UI.quiz = { kind:'vocab', levelId, questions, idx:0, correct:0, selected:null, textVal:'', submitted:false };
+  nav('quiz');
+}
+function startPlacementTest(){
+  const questions = generatePlacementQuiz();
+  UI.quiz = { kind:'placement', questions, idx:0, correct:0, selected:null, textVal:'', submitted:false };
+  nav('quiz');
+}
+function startCumulativeReview(){
+  const learnedCount = VOCAB_LEVELS.filter(lv=>vocabProg(lv.id).learned).length;
+  if(learnedCount === 0) return;
+  const questions = generateCumulativeReviewQuiz();
+  if(!questions.length) return;
+  UI.quiz = { kind:'review', questions, idx:0, correct:0, selected:null, textVal:'', submitted:false };
+  nav('quiz');
+}
+
+function selectOption(idx){
+  if(!UI.quiz || UI.quiz.submitted) return;
+  UI.quiz.selected = idx;
+  render();
+}
+function setFillVal(val){
+  if(!UI.quiz) return;
+  UI.quiz.textVal = val;
+}
+function submitAnswer(){
+  const quiz = UI.quiz; if(!quiz || quiz.submitted) return;
+  const q = quiz.questions[quiz.idx];
+  let correct;
+  if(q.t === 'mcq'){
+    if(quiz.selected === null || quiz.selected === undefined) return;
+    correct = q.o[quiz.selected] === q.a;
+  } else {
+    if(!quiz.textVal || !quiz.textVal.trim()) return;
+    correct = normalizeAnswer(quiz.textVal) === normalizeAnswer(q.a);
+  }
+  quiz.submitted = true;
+  quiz.wasCorrect = correct;
+  if(correct) quiz.correct += 1;
+  render();
+}
+function nextQuestion(){
+  const quiz = UI.quiz; if(!quiz) return;
+  if(quiz.idx + 1 < quiz.questions.length){
+    quiz.idx += 1; quiz.selected = null; quiz.textVal=''; quiz.submitted = false; quiz.wasCorrect = undefined;
+    render();
+  } else {
+    finishQuiz();
+  }
+}
+function finishQuiz(){
+  const quiz = UI.quiz; if(!quiz) return;
+  const total = quiz.questions.length;
+  const score = quiz.correct / total;
+  const ratioMap = { grammar: PASS_RATIO, vocab: VOCAB_PASS_RATIO, placement: PASS_RATIO, review: 0.9 };
+  const ratio = ratioMap[quiz.kind] != null ? ratioMap[quiz.kind] : PASS_RATIO;
+  const pass = score >= ratio - 1e-9;
+  let newBadges = [];
+  if(quiz.kind === 'grammar'){
+    newBadges = withBadgeDiff(() => {
+      const prog = topicProg(quiz.topicId);
+      const already = prog[quiz.diff].passed;
+      if(pass && !already){ addXP(XP[quiz.diff]); awardBadge('first_star'); }
+      const pct = Math.round(score*100);
+      if(pct > prog[quiz.diff].best) prog[quiz.diff].best = pct;
+      if(pass) prog[quiz.diff].passed = true;
+      if(pass && score === 1 && quiz.diff === 'hard') awardBadge('perfectionist');
+      if(pass && quiz.diff === 'hard'){
+        const gi = GRAMMAR_FLAT.findIndex(g=>g.topic.id===quiz.topicId);
+        if(gi === STATE.grammar.unlockedIdx && gi+1 < GRAMMAR_FLAT.length) STATE.grammar.unlockedIdx = gi+1;
+      }
+      checkMilestoneBadges();
+      saveState();
+    });
+  } else if(quiz.kind === 'vocab') {
+    newBadges = withBadgeDiff(() => {
+      const prog = vocabProg(quiz.levelId);
+      const already = prog.quizPassed;
+      if(pass && !already) addXP(XP.vocab);
+      const pct = Math.round(score*100);
+      if(pct > prog.best) prog.best = pct;
+      if(pass) prog.quizPassed = true;
+      if(pass){
+        const vi = VOCAB_LEVELS.findIndex(l=>l.id===quiz.levelId);
+        if(vi === STATE.vocab.unlockedIdx && vi+1 < VOCAB_LEVELS.length) STATE.vocab.unlockedIdx = vi+1;
+      }
+      checkMilestoneBadges();
+      saveState();
+    });
+  } else if(quiz.kind === 'placement') {
+    newBadges = withBadgeDiff(() => {
+      const total = VOCAB_LEVELS.length;
+      const daysEarned = Math.round(score * total);
+      const newIdx = Math.max(STATE.vocab.unlockedIdx, Math.min(daysEarned, total - 1));
+      STATE.vocab.unlockedIdx = newIdx;
+      if(!STATE.vocab.placementDone){ addXP(20); STATE.vocab.placementDone = true; }
+      if(score === 1) awardBadge('placement_ace');
+      checkMilestoneBadges();
+      saveState();
+    });
+  } else if(quiz.kind === 'review') {
+    newBadges = withBadgeDiff(() => {
+      const pct = Math.round(score*100);
+      if(pct > STATE.vocab.reviewBest) STATE.vocab.reviewBest = pct;
+      if(score >= 0.9){
+        if(!STATE.vocab.reviewPassed){ addXP(25); STATE.vocab.reviewPassed = true; }
+        awardBadge('vocab_reviewer');
+      }
+      checkMilestoneBadges();
+      saveState();
+    });
+  }
+  quiz.pass = pass; quiz.score = score; quiz.newBadges = newBadges;
+  UI.view = 'quizResult';
+  render();
+}
+
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function esc(s){ return (s==null?'':s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function retryQuiz(){
+  const quiz = UI.quiz; if(!quiz) return;
+  if(quiz.kind === 'grammar') startGrammarQuiz(quiz.topicId, quiz.diff);
+  else if(quiz.kind === 'vocab') startVocabQuiz(quiz.levelId);
+  else if(quiz.kind === 'placement') startPlacementTest();
+  else if(quiz.kind === 'review') startCumulativeReview();
+}
+function checkLearnComplete(){
+  const prog = vocabProg(UI.vocabId);
+  if(!prog.learned && UI.viewedCards.size >= 5){
+    prog.learned = true;
+    addXP(XP.learn);
+    checkMilestoneBadges();
+    saveState();
+  }
+}
+
+/* ================= RENDER: HEADER & SHELL ================= */
+function xpRing(pct, size){
+  size = size || 108;
+  const r = 46, c = 2*Math.PI*r;
+  const off = c - (Math.max(0,Math.min(100,pct))/100)*c;
+  return '<svg class="xp-ring" width="'+size+'" height="'+size+'" viewBox="0 0 100 100">'
+    + '<circle cx="50" cy="50" r="'+r+'" class="ring-track"></circle>'
+    + '<circle cx="50" cy="50" r="'+r+'" class="ring-fill" style="stroke-dasharray:'+c+';stroke-dashoffset:'+off+'"></circle>'
+    + '</svg>';
+}
+
+function renderHeader(){
+  const lvl = userLevelInfo();
+  const navItems = [
+    {view:'home', label:'Home'},
+    {view:'grammarMap', label:'Grammar Sky', active:['grammarMap','topic']},
+    {view:'vocabMap', label:'Vocabulary', active:['vocabMap','vocabDay']},
+    {view:'progress', label:'Progress'}
+  ];
+  const navHtml = navItems.map(n => {
+    const active = (n.active||[n.view]).includes(UI.view);
+    return '<button class="nav-btn'+(active?' active':'')+'" data-action="nav" data-view="'+n.view+'">'+n.label+'</button>';
+  }).join('');
+  return ''
+  + '<header class="topbar">'
+  +   '<div class="brand" data-action="nav" data-view="home" role="button">'
+  +     '<span class="brand-mark">'+ICONS.spark+'</span>'
+  +     '<span class="brand-name">English<em>Quest</em></span>'
+  +   '</div>'
+  +   '<nav class="main-nav">'+navHtml+'</nav>'
+  +   '<div class="stats-pill">'
+  +     '<span class="stat" title="Experience points">'+ICONS.spark+'<b>'+STATE.xp+'</b> XP</span>'
+  +     '<span class="stat" title="Daily streak">'+ICONS.flame+'<b>'+STATE.streak+'</b></span>'
+  +     '<span class="stat lvl" title="'+esc(lvl.title)+'">Lv '+lvl.level+'</span>'
+  +   '</div>'
+  + '</header>';
+}
+function renderMobileTabbar(){
+  const items = [
+    {view:'home', label:'Home', icon:'spark'},
+    {view:'grammarMap', label:'Grammar', icon:'star', active:['grammarMap','topic']},
+    {view:'vocabMap', label:'Vocab', icon:'book', active:['vocabMap','vocabDay']},
+    {view:'progress', label:'Progress', icon:'trophy'}
+  ];
+  return '<nav class="mobile-tabbar">' + items.map(n=>{
+    const active = (n.active||[n.view]).includes(UI.view);
+    return '<button class="tab-btn'+(active?' active':'')+'" data-action="nav" data-view="'+n.view+'">'+ic(n.icon)+'<span>'+n.label+'</span></button>';
+  }).join('') + '</nav>';
+}
+
+function render(){
+  const root = document.getElementById('root');
+  if(!root) return;
+  let body;
+  switch(UI.view){
+    case 'grammarMap': body = renderGrammarMap(); break;
+    case 'topic': body = renderTopicDetail(UI.topicId); break;
+    case 'quiz': body = renderQuizScreen(); break;
+    case 'quizResult': body = renderQuizResult(); break;
+    case 'vocabMap': body = renderVocabMap(); break;
+    case 'vocabDay': body = renderVocabDay(); break;
+    case 'progress': body = renderProgress(); break;
+    case 'home':
+    default: body = renderHome(); break;
+  }
+  root.innerHTML = renderHeader() + '<main class="app-main">' + body + '</main>' + renderMobileTabbar();
+}
+
+/* ================= RENDER: HOME ================= */
+function findNextTopic(){
+  const t = GRAMMAR_FLAT.find(g => !topicProg(g.topic.id).hard.passed);
+  return t || GRAMMAR_FLAT[GRAMMAR_FLAT.length-1];
+}
+function findNextVocab(){
+  const v = VOCAB_LEVELS.find(l => !vocabProg(l.id).quizPassed);
+  return v || VOCAB_LEVELS[VOCAB_LEVELS.length-1];
+}
+function greeting(){
+  const h = new Date().getHours();
+  if(h < 12) return 'Good morning';
+  if(h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+function renderHome(){
+  const lvl = userLevelInfo();
+  const mastered = totalTopicsMastered();
+  const learned = totalVocabLearned();
+  const nextTopic = findNextTopic();
+  const nextVocab = findNextVocab();
+  const badgeCount = STATE.badges.length;
+  return ''
+  + '<section class="hero">'
+  +   '<div class="hero-text">'
+  +     '<p class="eyebrow">'+greeting()+', explorer</p>'
+  +     '<h1>Chart your English sky, one star at a time.</h1>'
+  +     '<p class="hero-sub">Fifteen grammar constellations and ten vocabulary almanacs stand between you and total mastery. Keep your streak alive and let\u2019s move.</p>'
+  +     '<div class="hero-actions">'
+  +       '<button class="btn btn-primary" data-action="open-topic" data-id="'+nextTopic.topic.id+'">'+ic('play')+' Continue Grammar Sky</button>'
+  +       '<button class="btn btn-ghost" data-action="open-vocab-day" data-id="'+nextVocab.id+'">'+ic('book')+' Today\u2019s Vocabulary</button>'
+  +     '</div>'
+  +   '</div>'
+  +   '<div class="hero-ring">'
+  +     xpRing(lvl.pct, 148)
+  +     '<div class="ring-center"><span class="ring-level">Lv '+lvl.level+'</span><span class="ring-title">'+esc(lvl.title)+'</span><span class="ring-xp">'+lvl.into+' / '+lvl.need+' XP</span></div>'
+  +   '</div>'
+  + '</section>'
+  + '<section class="quickstats">'
+  +   statCard('star', mastered+' / '+GRAMMAR_FLAT.length, 'Topics mastered')
+  +   statCard('book', learned+' / '+VOCAB_POOL.length, 'Words learned')
+  +   statCard('flame', STATE.streak+' day'+(STATE.streak===1?'':'s'), 'Current streak')
+  +   statCard('trophy', badgeCount+' / '+BADGES.length, 'Badges earned')
+  + '</section>'
+  + '<section class="home-grid">'
+  +   homeCard('Grammar Sky', nextTopic.topic.title, 'Next up in '+nextTopic.levelName, 'open-topic', nextTopic.topic.id, nextTopic.levelColor)
+  +   homeCard('Vocabulary Almanac', 'Day '+ (VOCAB_LEVELS.findIndex(l=>l.id===nextVocab.id)+1)+' \u00b7 5 new words', 'Learn, then pass the quiz to unlock the next day', 'open-vocab-day', nextVocab.id, 'gold')
+  + '</section>';
+}
+function statCard(icon, value, label){
+  return '<div class="stat-card"><span class="stat-icon">'+ic(icon)+'</span><span class="stat-value">'+value+'</span><span class="stat-label">'+label+'</span></div>';
+}
+function homeCard(kicker, title, sub, action, id, color){
+  return '<div class="home-card" data-color="'+color+'" data-action="'+action+'" data-id="'+id+'">'
+    + '<p class="kicker">'+kicker+'</p>'
+    + '<h3>'+esc(title)+'</h3>'
+    + '<p class="home-card-sub">'+esc(sub)+'</p>'
+    + '<span class="home-card-cta">Go now '+ic('arrow')+'</span>'
+    + '</div>';
+}
+
+/* ================= RENDER: GRAMMAR MAP ================= */
+function renderGrammarMap(){
+  let html = '<section class="page-head"><p class="eyebrow">Grammar Sky</p><h1>Fifteen constellations, five skies</h1><p class="page-sub">Master every quiz in a topic to reveal the next star on your path.</p></section>';
+  GRAMMAR_LEVELS.forEach((lvl, li) => {
+    const topicsInLevel = lvl.topics.length;
+    const masteredInLevel = lvl.topics.filter(tp=>topicProg(tp.id).hard.passed).length;
+    html += '<div class="level-divider" data-color="'+lvl.color+'">'
+      + '<span class="level-num">Sky '+(li+1)+'</span>'
+      + '<div><h2>'+lvl.name+'</h2><p>'+lvl.tagline+'</p></div>'
+      + '<span class="level-count">'+masteredInLevel+' / '+topicsInLevel+'</span>'
+      + '</div>';
+    html += '<ul class="constellation-path">';
+    lvl.topics.forEach(tp => {
+      const g = GRAMMAR_FLAT.find(x=>x.topic.id===tp.id);
+      const idx = g.topicIdx;
+      const unlocked = isTopicUnlocked(idx);
+      const prog = topicProg(tp.id);
+      const mastered = prog.hard.passed;
+      const started = prog.easy.passed || prog.medium.passed;
+      let state = 'locked';
+      if(mastered) state = 'mastered'; else if(unlocked) state = started ? 'progress' : 'unlocked';
+      const icon = mastered ? 'check' : (unlocked ? 'star' : 'lock');
+      html += '<li class="topic-node '+state+'" data-color="'+lvl.color+'" '+(unlocked?'data-action="open-topic" data-id="'+tp.id+'"':'')+'>'
+        + '<span class="node-star">'+ic(icon)+'</span>'
+        + '<span class="node-info"><span class="node-title">'+tp.title+'</span><span class="node-sub">'+(mastered?'Mastered \u00b7 all quizzes passed':unlocked?(started?'In progress':'Ready to begin'):'Locked \u2014 finish the previous topic')+'</span></span>'
+        + (unlocked?ic('arrow','node-arrow'):'')
+        + '</li>';
+    });
+    html += '</ul>';
+  });
+  return html;
+}
+
+/* ================= RENDER: TOPIC DETAIL ================= */
+function renderTopicDetail(topicId){
+  const g = GRAMMAR_FLAT.find(x=>x.topic.id===topicId);
+  if(!g) return renderGrammarMap();
+  const tp = g.topic;
+  const prog = topicProg(topicId);
+  const lessonHtml = tp.lesson.map(sec => ''
+    + '<div class="lesson-card">'
+    +   '<h3>'+sec.h+'</h3>'
+    +   sec.p.map(p=>'<p>'+p+'</p>').join('')
+    +   (sec.ex && sec.ex.length ? '<div class="examples">'+sec.ex.map(e=>'<div class="example">'+ic('spark')+'<span>'+e+'</span></div>').join('')+'</div>' : '')
+    + '</div>').join('');
+  const diffs = [
+    {key:'easy', label:'Easy', desc:'Warm up with the basics'},
+    {key:'medium', label:'Medium', desc:'Apply the rule in context'},
+    {key:'hard', label:'Hard', desc:'Prove full mastery'}
+  ];
+  const quizHtml = diffs.map(d => {
+    const unlocked = diffUnlocked(topicId, d.key);
+    const dp = prog[d.key];
+    let statusText;
+    if(dp.passed) statusText = 'Passed \u00b7 best score '+dp.best+'%';
+    else if(unlocked) statusText = dp.best ? ('Best score '+dp.best+'% \u2014 need 70% to pass') : 'Not attempted yet';
+    else statusText = 'Locked \u2014 pass the previous quiz first';
+    return '<div class="quiz-card '+(dp.passed?'passed':unlocked?'open':'locked')+'" data-diff="'+d.key+'">'
+      + '<div class="quiz-card-top"><span class="quiz-diff-badge">'+d.label+'</span>'+(dp.passed?ic('check','done-check'):unlocked?'':ic('lock'))+'</div>'
+      + '<p class="quiz-desc">'+d.desc+'</p>'
+      + '<p class="quiz-status">'+statusText+'</p>'
+      + (unlocked ? '<button class="btn btn-small btn-primary" data-action="start-quiz" data-topic="'+topicId+'" data-diff="'+d.key+'">'+(dp.passed?'Retry quiz':'Start quiz')+'</button>' : '<button class="btn btn-small btn-disabled" disabled>Locked</button>')
+      + '</div>';
+  }).join('');
+  return ''
+  + '<button class="back-link" data-action="nav" data-view="grammarMap">'+ic('arrow')+' Back to Grammar Sky</button>'
+  + '<section class="page-head" data-color="'+g.levelColor+'"><p class="eyebrow">'+g.levelName+'</p><h1>'+tp.title+'</h1></section>'
+  + '<div class="lesson-wrap">'+lessonHtml+'</div>'
+  + '<section class="quiz-section"><h2>Prove it \u2014 pass all three to unlock the next topic</h2><div class="quiz-grid">'+quizHtml+'</div></section>';
+}
+
+/* ================= RENDER: QUIZ SCREEN ================= */
+function renderQuizScreen(){
+  const quiz = UI.quiz;
+  if(!quiz) return renderHome();
+  const q = quiz.questions[quiz.idx];
+  const total = quiz.questions.length;
+  let title, sub;
+  if(quiz.kind === 'grammar'){
+    const g = GRAMMAR_FLAT.find(x=>x.topic.id===quiz.topicId);
+    title = g.topic.title;
+    sub = quiz.diff.charAt(0).toUpperCase()+quiz.diff.slice(1)+' quiz';
+  } else if(quiz.kind === 'vocab'){
+    const vi = VOCAB_LEVELS.findIndex(l=>l.id===quiz.levelId);
+    title = 'Vocabulary \u2014 Day '+(vi+1);
+    sub = 'Word check';
+  } else if(quiz.kind === 'placement'){
+    title = 'Vocabulary Placement Test';
+    sub = 'One word per day';
+  } else {
+    title = 'Cumulative Vocabulary Review';
+    sub = 'Mixed \u00b7 all words learned';
+  }
+  const pct = Math.round(((quiz.idx)/total)*100);
+  let optionsHtml;
+  if(q.t === 'mcq'){
+    optionsHtml = '<div class="options">' + q.o.map((opt, i) => {
+      let cls = 'opt-btn';
+      if(quiz.submitted){
+        if(opt === q.a) cls += ' correct';
+        else if(i === quiz.selected) cls += ' incorrect';
+      } else if(quiz.selected === i) cls += ' selected';
+      return '<button class="'+cls+'" data-action="select-option" data-idx="'+i+'" '+(quiz.submitted?'disabled':'')+'>'+esc(opt)+'</button>';
+    }).join('') + '</div>';
+  } else {
+    optionsHtml = '<div class="fill-wrap"><input type="text" class="fill-input" data-action="fill-input" placeholder="Type your answer\u2026" value="'+esc(quiz.textVal)+'" '+(quiz.submitted?'disabled':'')+' autocomplete="off" autocapitalize="off" spellcheck="false"/></div>';
+    if(quiz.submitted){
+      optionsHtml += '<p class="fill-feedback">Correct answer: <b>'+esc(q.a)+'</b></p>';
+    }
+  }
+  let feedback = '';
+  if(quiz.submitted){
+    feedback = '<div class="feedback '+(quiz.wasCorrect?'good':'bad')+'">'+(quiz.wasCorrect ? ic('check')+' Correct!' : ic('lock')+' Not quite.')+'</div>';
+  }
+  const canSubmit = q.t==='mcq' ? (quiz.selected !== null && quiz.selected !== undefined) : (quiz.textVal && quiz.textVal.trim().length>0);
+  return ''
+  + '<section class="quiz-screen">'
+  +   '<div class="quiz-top"><span class="quiz-title">'+esc(title)+'</span><span class="quiz-sub-badge">'+sub+'</span></div>'
+  +   '<div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div></div>'
+  +   '<p class="q-count">Question '+(quiz.idx+1)+' of '+total+'</p>'
+  +   '<h2 class="q-text">'+q.q+'</h2>'
+  +   optionsHtml
+  +   feedback
+  +   '<div class="quiz-actions">'
+  +     (quiz.submitted
+        ? '<button class="btn btn-primary" data-action="next-question">'+(quiz.idx+1<total?'Next question':'See results')+' '+ic('arrow')+'</button>'
+        : '<button class="btn btn-primary" data-action="submit-answer" '+(canSubmit?'':'disabled')+'>Submit answer</button>')
+  +   '</div>'
+  + '</section>';
+}
+
+/* ================= RENDER: QUIZ RESULT ================= */
+function renderQuizResult(){
+  const quiz = UI.quiz;
+  if(!quiz) return renderHome();
+  const pct = Math.round(quiz.score*100);
+  const msg = quiz.pass ? pick(PASS_MSGS) : pick(FAIL_MSGS);
+  let xpLine, backAction, continueBtn = '';
+  if(quiz.kind === 'grammar'){
+    const g = GRAMMAR_FLAT.find(x=>x.topic.id===quiz.topicId);
+    xpLine = quiz.pass ? ('+'+XP[quiz.diff]+' XP') : '+0 XP \u2014 try again to earn it';
+    backAction = 'data-action="open-topic" data-id="'+quiz.topicId+'"';
+    if(quiz.pass && quiz.diff==='hard'){
+      const nextIdx = g.topicIdx + 1;
+      if(nextIdx < GRAMMAR_FLAT.length){
+        const nt = GRAMMAR_FLAT[nextIdx];
+        continueBtn = '<button class="btn btn-primary" data-action="open-topic" data-id="'+nt.topic.id+'">Next topic: '+nt.topic.title+' '+ic('arrow')+'</button>';
+      } else {
+        continueBtn = '<button class="btn btn-primary" data-action="nav" data-view="grammarMap">You\u2019ve reached the last star! '+ic('arrow')+'</button>';
+      }
+    }
+  } else if(quiz.kind === 'vocab') {
+    xpLine = quiz.pass ? ('+'+XP.vocab+' XP') : '+0 XP \u2014 try again to earn it';
+    backAction = 'data-action="open-vocab-day" data-id="'+quiz.levelId+'"';
+    if(quiz.pass){
+      const vi = VOCAB_LEVELS.findIndex(l=>l.id===quiz.levelId);
+      if(vi+1 < VOCAB_LEVELS.length){
+        continueBtn = '<button class="btn btn-primary" data-action="open-vocab-day" data-id="'+VOCAB_LEVELS[vi+1].id+'">Next day: Day '+(vi+2)+' '+ic('arrow')+'</button>';
+      } else {
+        continueBtn = '<button class="btn btn-primary" data-action="nav" data-view="vocabMap">You\u2019ve finished every day! '+ic('arrow')+'</button>';
+      }
+    }
+  } else if(quiz.kind === 'placement') {
+    xpLine = '+20 XP for completing the placement test';
+    backAction = 'data-action="nav" data-view="vocabMap"';
+    const landedIdx = STATE.vocab.unlockedIdx;
+    const landedDay = Math.min(landedIdx, VOCAB_LEVELS.length-1) + 1;
+    continueBtn = '<button class="btn btn-primary" data-action="open-vocab-day" data-id="'+VOCAB_LEVELS[Math.min(landedIdx, VOCAB_LEVELS.length-1)].id+'">Go to Day '+landedDay+' '+ic('arrow')+'</button>';
+  } else if(quiz.kind === 'review') {
+    xpLine = quiz.pass ? '+25 XP for a strong review' : 'Score 90%+ to earn review XP';
+    backAction = 'data-action="nav" data-view="vocabMap"';
+    continueBtn = '<button class="btn btn-ghost" data-action="nav" data-view="progress">View progress '+ic('arrow')+'</button>';
+  }
+  const badgesHtml = (quiz.newBadges && quiz.newBadges.length)
+    ? '<div class="new-badges"><p class="new-badges-label">New badge'+(quiz.newBadges.length>1?'s':'')+' unlocked!</p><div class="badge-row">'+quiz.newBadges.map(bid=>{
+        const b = BADGES.find(x=>x.id===bid);
+        return '<div class="badge-card earned"><span class="badge-icon">'+ic(b.icon)+'</span><span class="badge-name">'+b.name+'</span></div>';
+      }).join('')+'</div></div>'
+    : '';
+  let headline = quiz.pass ? 'You passed!' : 'Keep practicing';
+  let ringTitle = quiz.pass ? 'Passed' : 'Not yet';
+  let resultMsg = msg;
+  if(quiz.kind === 'placement'){
+    const landedDay = Math.min(STATE.vocab.unlockedIdx, VOCAB_LEVELS.length-1) + 1;
+    headline = 'Placement complete!';
+    ringTitle = 'Day '+landedDay;
+    resultMsg = 'Based on your score, you\u2019ve tested into Day '+landedDay+'. Earlier days stay available any time you want a refresher.';
+  } else if(quiz.kind === 'review'){
+    headline = quiz.pass ? 'Sharp memory!' : 'Good practice round';
+    ringTitle = pct+'%';
+    resultMsg = quiz.pass ? 'You\u2019re retaining your vocabulary beautifully. Come back for another round anytime.' : 'Review reinforces memory \u2014 revisit a day\u2019s flashcards and try this again whenever you like.';
+  }
+  return ''
+  + '<section class="result-screen '+(quiz.pass?'pass':'fail')+'">'
+  +   '<div class="result-ring">'+xpRing(pct,140)+'<div class="ring-center"><span class="ring-level">'+(quiz.kind==='placement'?'':pct+'%')+'</span><span class="ring-title">'+ringTitle+'</span></div></div>'
+  +   '<h1>'+headline+'</h1>'
+  +   '<p class="result-msg">'+resultMsg+'</p>'
+  +   '<p class="result-xp">'+xpLine+'</p>'
+  +   badgesHtml
+  +   '<div class="result-actions">'
+  +     '<button class="btn btn-ghost" data-action="retry-quiz">'+ic('play')+' Retry quiz</button>'
+  +     '<button class="btn btn-ghost" '+backAction+'>Back</button>'
+  +     continueBtn
+  +   '</div>'
+  + '</section>';
+}
+
+/* ================= RENDER: VOCAB MAP ================= */
+function renderVocabMap(){
+  let html = '<section class="page-head"><p class="eyebrow">Vocabulary Almanac</p><h1>Ten days, fifty words</h1><p class="page-sub">Learn each day\u2019s five words with flashcards, then pass the quiz to reveal the next day.</p></section>';
+  const learnedDays = VOCAB_LEVELS.filter(lv=>vocabProg(lv.id).learned).length;
+  const reviewReady = learnedDays > 0;
+  html += '<div class="vocab-tools">'
+    + '<div class="tool-card" data-action="start-placement-test">'
+    +   '<span class="tool-icon">'+ic('telescope')+'</span>'
+    +   '<div><h3>Placement test</h3><p>Take a quick 10-question test spanning all 10 days. Score well and skip ahead to your true level.</p></div>'
+    +   '<button class="btn btn-small btn-primary" data-action="start-placement-test">'+(STATE.vocab.placementDone?'Retake test':'Start test')+'</button>'
+    + '</div>'
+    + '<div class="tool-card" '+(reviewReady?'data-action="start-cumulative-review"':'')+'>'
+    +   '<span class="tool-icon">'+ic('bulb')+'</span>'
+    +   '<div><h3>Cumulative review</h3><p>'+(reviewReady?'Mixed practice from every word you\u2019ve learned so far ('+learnedDays+' day'+(learnedDays===1?'':'s')+'). Score 90%+ for a bonus.':'Learn at least one day\u2019s words to unlock a mixed review.')+'</p></div>'
+    +   '<button class="btn btn-small '+(reviewReady?'btn-primary':'btn-disabled')+'" '+(reviewReady?'data-action="start-cumulative-review"':'disabled')+'>'+(STATE.vocab.reviewBest?'Review again \u00b7 best '+STATE.vocab.reviewBest+'%':'Start review')+'</button>'
+    + '</div>'
+    + '</div>';
+  html += '<ul class="constellation-path vocab-path">';
+  VOCAB_LEVELS.forEach((lv, i) => {
+    const unlocked = isVocabUnlocked(i);
+    const prog = vocabProg(lv.id);
+    let state = 'locked';
+    if(prog.quizPassed) state = 'mastered';
+    else if(unlocked) state = prog.learned ? 'progress' : 'unlocked';
+    const icon = prog.quizPassed ? 'check' : (unlocked ? 'book' : 'lock');
+    const subText = prog.quizPassed ? 'Completed \u00b7 best '+prog.best+'%' : unlocked ? (prog.learned ? 'Words learned \u2014 quiz ready' : '5 new words waiting') : 'Locked \u2014 finish the previous day';
+    html += '<li class="topic-node '+state+'" data-color="gold" '+(unlocked?'data-action="open-vocab-day" data-id="'+lv.id+'"':'')+'>'
+      + '<span class="node-star">'+ic(icon)+'</span>'
+      + '<span class="node-info"><span class="node-title">Day '+(i+1)+'</span><span class="node-sub">'+subText+'</span></span>'
+      + (unlocked?ic('arrow','node-arrow'):'')
+      + '</li>';
+  });
+  html += '</ul>';
+  return html;
+}
+
+/* ================= RENDER: VOCAB DAY ================= */
+function renderVocabDay(){
+  const lv = VOCAB_LEVELS.find(l=>l.id===UI.vocabId);
+  if(!lv) return renderVocabMap();
+  const prog = vocabProg(lv.id);
+  const dayNum = VOCAB_LEVELS.findIndex(l=>l.id===lv.id) + 1;
+  const tabsHtml = ''
+    + '<div class="vocab-tabs">'
+    +   '<button class="vtab '+(UI.vocabTab==='learn'?'active':'')+'" data-action="vocab-tab" data-tab="learn">Learn</button>'
+    +   '<button class="vtab '+(UI.vocabTab==='quiz'?'active':'')+' '+(prog.learned?'':'disabled')+'" data-action="vocab-tab" data-tab="quiz">Quiz'+(prog.learned?'':' '+ic('lock'))+'</button>'
+    + '</div>';
+  let content;
+  if(UI.vocabTab === 'quiz'){
+    if(!prog.learned){
+      content = '<div class="empty-note">Finish learning all 5 words first, then come back for the quiz.</div>';
+    } else {
+      content = '<div class="vocab-quiz-intro">'
+        + '<p>Answer 5 questions about today\u2019s words. Score at least 80% to unlock Day '+(dayNum+1)+'.</p>'
+        + (prog.quizPassed ? '<p class="quiz-status">Already passed \u00b7 best score '+prog.best+'%</p>' : '')
+        + '<button class="btn btn-primary" data-action="start-vocab-quiz" data-id="'+lv.id+'">'+(prog.quizPassed?'Retry quiz':'Start quiz')+'</button>'
+        + '</div>';
+    }
+  } else {
+    const idx = UI.cardIdx;
+    const word = lv.words[idx];
+    content = ''
+      + '<div class="flashcard '+(UI.flipped?'flipped':'')+'" data-action="flip-card">'
+      +   '<div class="flashcard-inner">'
+      +     '<div class="flashcard-face front"><span class="fc-pos">'+word.pos+'</span><h2>'+word.w+'</h2><p class="fc-hint">Tap to reveal meaning</p></div>'
+      +     '<div class="flashcard-face back"><h3>'+word.w+'</h3><p class="fc-meaning">'+word.m+'</p><p class="fc-example">\u201c'+word.ex+'\u201d</p><p class="fc-syn">Synonym: '+word.syn+'</p></div>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="card-dots">' + lv.words.map((w,i)=>'<button class="dot '+(i===idx?'active':'')+' '+(UI.viewedCards.has(i)?'seen':'')+'" data-action="jump-dot" data-idx="'+i+'"></button>').join('') + '</div>'
+      + '<div class="card-nav">'
+      +   '<button class="btn btn-small btn-ghost" data-action="card-nav" data-dir="-1" '+(idx===0?'disabled':'')+'>'+ic('arrow')+' Prev</button>'
+      +   '<span class="card-progress">'+(idx+1)+' / '+lv.words.length+'</span>'
+      +   '<button class="btn btn-small btn-ghost" data-action="card-nav" data-dir="1" '+(idx===lv.words.length-1?'disabled':'')+'>Next '+ic('arrow')+'</button>'
+      + '</div>'
+      + (prog.learned ? '<p class="learned-note">'+ic('check')+' All words viewed \u2014 quiz unlocked!</p>' : '<p class="learned-note dim">Viewed '+UI.viewedCards.size+' / 5 words</p>');
+  }
+  return ''
+  + '<button class="back-link" data-action="nav" data-view="vocabMap">'+ic('arrow')+' Back to Vocabulary Almanac</button>'
+  + '<section class="page-head" data-color="gold"><p class="eyebrow">Vocabulary \u00b7 Day '+dayNum+'</p><h1>5 words to collect today</h1></section>'
+  + tabsHtml
+  + '<div class="vocab-content">'+content+'</div>';
+}
+
+/* ================= RENDER: PROGRESS / ANALYTICS ================= */
+function avgBest(diff){
+  const vals = GRAMMAR_FLAT.map(g => topicProg(g.topic.id)[diff].best).filter(v=>v>0);
+  if(!vals.length) return null;
+  return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+}
+function renderProgress(){
+  const lvl = userLevelInfo();
+  const mastered = totalTopicsMastered();
+  const learned = totalVocabLearned();
+  const vocabPassed = VOCAB_LEVELS.filter(l=>vocabProg(l.id).quizPassed).length;
+
+  const levelBars = GRAMMAR_LEVELS.map(lv => {
+    const total = lv.topics.length;
+    const done = lv.topics.filter(tp=>topicProg(tp.id).hard.passed).length;
+    const pct = Math.round((done/total)*100);
+    return '<div class="bar-row"><span class="bar-label">'+lv.name+'</span><div class="bar-track"><div class="bar-fill" data-color="'+lv.color+'" style="width:'+pct+'%"></div></div><span class="bar-value">'+done+'/'+total+'</span></div>';
+  }).join('');
+
+  const diffLabels = [['easy','Easy'],['medium','Medium'],['hard','Hard']];
+  const accuracyBars = diffLabels.map(([key,label]) => {
+    const avg = avgBest(key);
+    return '<div class="bar-row"><span class="bar-label">'+label+'</span><div class="bar-track"><div class="bar-fill" data-color="violet" style="width:'+(avg||0)+'%"></div></div><span class="bar-value">'+(avg!==null ? avg+'%' : '\u2014')+'</span></div>';
+  }).join('');
+
+  const badgeGrid = BADGES.map(b => {
+    const earned = STATE.badges.includes(b.id);
+    return '<div class="badge-card '+(earned?'earned':'locked')+'" title="'+esc(b.desc)+'">'
+      + '<span class="badge-icon">'+ic(b.icon)+'</span>'
+      + '<span class="badge-name">'+b.name+'</span>'
+      + '<span class="badge-desc">'+b.desc+'</span>'
+      + '</div>';
+  }).join('');
+
+  return ''
+  + '<section class="page-head"><p class="eyebrow">Progress</p><h1>Your journey so far</h1></section>'
+  + '<section class="progress-top">'
+  +   '<div class="progress-ring-card">'+xpRing(lvl.pct,140)+'<div class="ring-center"><span class="ring-level">Lv '+lvl.level+'</span><span class="ring-title">'+esc(lvl.title)+'</span></div><p class="ring-caption">'+STATE.xp+' XP total \u00b7 '+lvl.into+'/'+lvl.need+' to next level</p></div>'
+  +   '<div class="progress-mini-stats">'
+  +     statCard('star', mastered+' / '+GRAMMAR_FLAT.length, 'Grammar topics mastered')
+  +     statCard('book', learned+' / '+VOCAB_POOL.length, 'Vocabulary words learned')
+  +     statCard('flame', STATE.streak+' (best '+STATE.longestStreak+')', 'Day streak')
+  +     statCard('trophy', STATE.badges.length+' / '+BADGES.length, 'Badges earned')
+  +   '</div>'
+  + '</section>'
+  + '<section class="progress-section"><h2>Grammar mastery by sky</h2><div class="bar-list">'+levelBars+'</div></section>'
+  + '<section class="progress-section"><h2>Average quiz accuracy by difficulty</h2><div class="bar-list">'+accuracyBars+'</div></section>'
+  + '<section class="progress-section"><h2>Vocabulary days completed</h2><div class="bar-list"><div class="bar-row"><span class="bar-label">Days passed</span><div class="bar-track"><div class="bar-fill" data-color="gold" style="width:'+Math.round((vocabPassed/VOCAB_LEVELS.length)*100)+'%"></div></div><span class="bar-value">'+vocabPassed+'/'+VOCAB_LEVELS.length+'</span></div>'
+  +   '<div class="bar-row"><span class="bar-label">Best review score</span><div class="bar-track"><div class="bar-fill" data-color="violet" style="width:'+STATE.vocab.reviewBest+'%"></div></div><span class="bar-value">'+(STATE.vocab.reviewBest?STATE.vocab.reviewBest+'%':'\u2014')+'</span></div>'
+  + '</div></section>'
+  + '<section class="progress-section"><h2>Badge gallery</h2><div class="badge-grid">'+badgeGrid+'</div></section>';
+}
+
+/* ================= EVENT DELEGATION & INIT ================= */
+function handleClick(e){
+  const el = e.target.closest('[data-action]');
+  if(!el) return;
+  const action = el.dataset.action;
+  switch(action){
+    case 'nav': nav(el.dataset.view); break;
+    case 'open-topic': nav('topic', {topicId: el.dataset.id}); break;
+    case 'start-quiz': startGrammarQuiz(el.dataset.topic, el.dataset.diff); break;
+    case 'select-option': selectOption(parseInt(el.dataset.idx,10)); break;
+    case 'submit-answer': submitAnswer(); break;
+    case 'next-question': nextQuestion(); break;
+    case 'retry-quiz': retryQuiz(); break;
+    case 'open-vocab-day':
+      UI.vocabId = el.dataset.id; UI.vocabTab = 'learn'; UI.cardIdx = 0; UI.viewedCards = new Set([0]); UI.flipped = false;
+      nav('vocabDay');
+      break;
+    case 'vocab-tab': {
+      const tab = el.dataset.tab;
+      const prog = vocabProg(UI.vocabId);
+      if(tab === 'quiz' && !prog.learned) return;
+      UI.vocabTab = tab; render();
+      break;
+    }
+    case 'card-nav': {
+      const dir = parseInt(el.dataset.dir,10);
+      UI.cardIdx = Math.max(0, Math.min(4, UI.cardIdx+dir));
+      UI.flipped = false;
+      UI.viewedCards.add(UI.cardIdx);
+      checkLearnComplete();
+      render();
+      break;
+    }
+    case 'jump-dot': {
+      UI.cardIdx = parseInt(el.dataset.idx,10);
+      UI.flipped = false;
+      UI.viewedCards.add(UI.cardIdx);
+      checkLearnComplete();
+      render();
+      break;
+    }
+    case 'flip-card': UI.flipped = !UI.flipped; render(); break;
+    case 'start-vocab-quiz': startVocabQuiz(el.dataset.id); break;
+    case 'start-placement-test': startPlacementTest(); break;
+    case 'start-cumulative-review': startCumulativeReview(); break;
+  }
+}
+function handleInput(e){
+  const el = e.target.closest('[data-action="fill-input"]');
+  if(!el) return;
+  setFillVal(el.value);
+}
+function handleKeydown(e){
+  if(UI.view === 'quiz' && UI.quiz){
+    const quiz = UI.quiz;
+    if(e.key === 'Enter'){
+      if(quiz.submitted) nextQuestion();
+      else submitAnswer();
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  render();
+  const root = document.getElementById('root');
+  root.addEventListener('click', handleClick);
+  root.addEventListener('input', handleInput);
+  document.addEventListener('keydown', handleKeydown);
+});
+
+</script>
+</body>
+</html>
