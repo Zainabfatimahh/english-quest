@@ -1812,6 +1812,8 @@ function handleInput(e){
   const el = e.target.closest('[data-action="fill-input"]');
   if(!el) return;
   setFillVal(el.value);
+  const submitBtn = document.querySelector('[data-action="submit-answer"]');
+  if(submitBtn) submitBtn.disabled = !(el.value && el.value.trim().length > 0);
 }
 function handleKeydown(e){
   if(UI.view === 'quiz' && UI.quiz){
