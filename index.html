@@ -48,7 +48,7 @@
 }
 
 *{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
 body{
   margin:0;
   background:
@@ -124,13 +124,13 @@ button:disabled{ cursor:not-allowed; opacity:.5; }
 .btn-disabled{ background:var(--bg-panel-3); color:var(--text-dimmer); }
 .btn-small{ padding:9px 14px; font-size:.85rem; width:100%; justify-content:center; }
 
-.xp-ring{ transform:rotate(-90deg); }
+.xp-ring{ transform:rotate(-90deg); flex:none; }
 .ring-track{ fill:none; stroke:var(--bg-panel-3); stroke-width:8; }
 .ring-fill{ fill:none; stroke:var(--gold); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .6s ease; }
-.ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
-.ring-level{ font-family:var(--font-display); font-size:1.4rem; font-weight:700; }
-.ring-title{ font-size:.72rem; color:var(--text-dim); max-width:9ch; }
-.ring-xp{ font-family:var(--font-mono); font-size:.65rem; color:var(--text-dimmer); margin-top:2px; }
+.ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:18%; box-sizing:border-box; overflow:hidden; line-height:1.2; }
+.ring-level{ font-family:var(--font-display); font-size:1.4rem; font-weight:700; line-height:1.1; }
+.ring-title{ font-size:.72rem; color:var(--text-dim); max-width:9ch; overflow-wrap:break-word; word-break:break-word; }
+.ring-xp{ font-family:var(--font-mono); font-size:.65rem; color:var(--text-dimmer); margin-top:2px; white-space:nowrap; }
 
 .quickstats{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:26px; }
 .stat-card{ background:var(--bg-panel); border:1px solid var(--line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:6px; align-items:flex-start; }
@@ -362,6 +362,10 @@ button:disabled{ cursor:not-allowed; opacity:.5; }
   .hero h1{ font-size:1.5rem; }
   .bar-row{ grid-template-columns:90px 1fr 40px; }
   .quickstats{ grid-template-columns:1fr 1fr; }
+  .xp-ring{ width:112px !important; height:112px !important; }
+  .ring-level{ font-size:1.15rem; }
+  .ring-title{ font-size:.66rem; max-width:8ch; }
+  .ring-xp{ font-size:.58rem; }
 }
 
 </style>
